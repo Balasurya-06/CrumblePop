@@ -117,9 +117,11 @@ export function Header() {
             </Link>
           )}
 
-          <Button variant="ghost" size="icon" aria-label="Admin Login" onClick={() => router.push('/admin/login')}>
-            <Shield className="h-6 w-6" />
-          </Button>
+          <Link href="/admin/login">
+            <Button variant="ghost" size="icon" aria-label="Admin Login">
+              <Shield className="h-6 w-6" />
+            </Button>
+          </Link>
 
 
           <div className="md:hidden">
