@@ -6,7 +6,7 @@ const products: Product[] = [
     name: 'Ferrero Rocher Cake',
     description: 'A decadent chocolate cake layered with hazelnut cream, crunchy wafer bits, and topped with Ferrero Rocher chocolates. A true indulgence.',
     category: 'Cakes',
-    images: ['https://placehold.co/600x600.png', 'https://placehold.co/600x600.png'],
+    images: ['https://placehold.co/600x600.png'],
     sizes: [
       { name: '0.5 kg', price: 600 },
       { name: '1 kg', price: 1100 },
@@ -19,7 +19,7 @@ const products: Product[] = [
     name: 'Chocolate Truffle Cake',
     description: 'Rich, moist chocolate sponge filled and frosted with a silky smooth chocolate truffle ganache. A classic choice for any celebration.',
     category: 'Cakes',
-    images: ['https://placehold.co/600x600.png', 'https://placehold.co/600x600.png'],
+    images: ['https://placehold.co/600x600.png'],
     sizes: [
       { name: '0.5 kg', price: 550 },
       { name: '1 kg', price: 1000 },

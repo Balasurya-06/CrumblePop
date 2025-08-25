@@ -36,7 +36,7 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-xl">
+    <Card className="flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-xl group">
       <CardHeader className="p-0">
         <div className="relative h-64 w-full">
           <Image
@@ -44,20 +44,20 @@ export function ProductCard({ product }: ProductCardProps) {
             alt={product.name}
             layout="fill"
             objectFit="cover"
-            className="transition-transform duration-300 group-hover:scale-105"
+            className="transition-transform duration-500 group-hover:scale-110"
             data-ai-hint={`${product.category === 'Cakes' ? 'cake' : 'brownie'} product`}
           />
-          {product.isBestseller && <Badge className="absolute right-2 top-2">Bestseller</Badge>}
+          {product.isBestseller && <Badge className="absolute right-3 top-3">Bestseller</Badge>}
         </div>
       </CardHeader>
-      <CardContent className="flex-grow p-4">
-        <CardTitle className="text-xl">{product.name}</CardTitle>
+      <CardContent className="flex-grow p-6">
+        <CardTitle className="text-xl font-headline">{product.name}</CardTitle>
         <CardDescription className="mt-2 min-h-[3rem] text-sm">{product.description}</CardDescription>
       </CardContent>
-      <CardFooter className="flex flex-col items-start gap-4 p-4">
+      <CardFooter className="flex flex-col items-start gap-4 p-6 bg-secondary/30">
         <div className="flex w-full items-center justify-between">
           <Select defaultValue={selectedSize.name} onValueChange={handleSizeChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] bg-background">
               <SelectValue placeholder="Select size" />
             </SelectTrigger>
             <SelectContent>
@@ -70,7 +70,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </Select>
           <p className="text-xl font-bold text-accent">₹{selectedSize.price}</p>
         </div>
-        <Button onClick={handleAddToCart} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+        <Button onClick={handleAddToCart} className="w-full">
           <ShoppingBag className="mr-2 h-4 w-4" /> Add to Cart
         </Button>
       </CardFooter>
