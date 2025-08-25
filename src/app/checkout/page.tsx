@@ -22,6 +22,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -69,9 +70,41 @@ export default function CheckoutPage() {
 
   if (!isClient) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <p>Loading...</p>
-      </div>
+        <div className="container mx-auto px-4 py-12">
+            <h1 className="text-center text-4xl font-bold mb-8">Checkout</h1>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <Card>
+                    <CardHeader><CardTitle>Delivery Information</CardTitle></CardHeader>
+                    <CardContent className="space-y-6">
+                        <div className="space-y-2">
+                           <Skeleton className="h-4 w-20" />
+                           <Skeleton className="h-10 w-full" />
+                        </div>
+                         <div className="space-y-2">
+                           <Skeleton className="h-4 w-20" />
+                           <Skeleton className="h-10 w-full" />
+                        </div>
+                         <div className="space-y-2">
+                           <Skeleton className="h-4 w-20" />
+                           <Skeleton className="h-20 w-full" />
+                        </div>
+                        <Skeleton className="h-12 w-full" />
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader><CardTitle>Order Summary</CardTitle></CardHeader>
+                     <CardContent className="space-y-4">
+                        <Skeleton className="h-16 w-full" />
+                        <Skeleton className="h-16 w-full" />
+                        <Separator />
+                        <Skeleton className="h-8 w-full" />
+                    </CardContent>
+                    <CardFooter>
+                        <Skeleton className="h-10 w-full" />
+                    </CardFooter>
+                </Card>
+            </div>
+        </div>
     );
   }
   

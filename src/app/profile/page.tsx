@@ -26,9 +26,9 @@ type User = {
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const { orders } = useOrderStore();
   const [userOrders, setUserOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("loggedInUser");
@@ -41,8 +41,8 @@ export default function ProfilePage() {
       // Here, we filter orders from the store based on the logged-in user's name.
       const currentUserOrders = orders.filter(order => order.customer.name === parsedUser.name);
       setUserOrders(currentUserOrders);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }, [router, orders]);
 
   const getUserInitials = (name: string) => {

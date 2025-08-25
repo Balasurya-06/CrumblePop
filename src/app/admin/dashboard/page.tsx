@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminDashboard() {
     const { orders, totalRevenue, totalOrders } = useOrderStore();
@@ -25,6 +26,54 @@ export default function AdminDashboard() {
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+    }
+    
+    if (!isClient) {
+        return (
+            <div className="flex-1 space-y-4 p-8 pt-6">
+                 <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                            <DollarSign className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent><Skeleton className="h-8 w-24" /></CardContent>
+                    </Card>
+                     <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Orders</CardTitle>
+                            <Package className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent><Skeleton className="h-8 w-12" /></CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">New Customers</CardTitle>
+                            <Users className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                           <Skeleton className="h-8 w-20" />
+                           <Skeleton className="h-4 w-32 mt-1" />
+                        </CardContent>
+                    </Card>
+                     <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                            <CreditCard className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <Skeleton className="h-8 w-16" />
+                            <Skeleton className="h-4 w-28 mt-1" />
+                        </CardContent>
+                    </Card>
+                 </div>
+                 <Card>
+                    <CardHeader><CardTitle>Recent Orders</CardTitle></CardHeader>
+                    <CardContent><p>Loading orders...</p></CardContent>
+                 </Card>
+            </div>
+        )
     }
     
     return (
@@ -39,7 +88,7 @@ export default function AdminDashboard() {
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{isClient ? formatCurrency(totalRevenue()) : '₹0.00'}</div>
+                        <div className="text-2xl font-bold">{formatCurrency(totalRevenue())}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -50,7 +99,7 @@ export default function AdminDashboard() {
                         <Package className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">+{isClient ? totalOrders() : 0}</div>
+                        <div className="text-2xl font-bold">+{totalOrders()}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -85,7 +134,7 @@ export default function AdminDashboard() {
                     <CardTitle>Recent Orders</CardTitle>
                 </CardHeader>
                 <CardContent>
-                   {isClient && orders.length > 0 ? (
+                   {orders.length > 0 ? (
                        <Table>
                            <TableHeader>
                                <TableRow>

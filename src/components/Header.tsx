@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -17,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from './ui/skeleton';
 
 
 const navLinks = [
@@ -54,7 +56,7 @@ export function Header() {
     return name.substring(0, 2);
   }
 
-  const cartItemCount = isClient ? totalItems() : 0;
+  const cartItemCount = totalItems();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -74,7 +76,7 @@ export function Header() {
           <CartSheet>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingBag className="h-6 w-6" />
-              {cartItemCount > 0 && (
+              {isClient && cartItemCount > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                   {cartItemCount}
                 </span>
@@ -83,7 +85,7 @@ export function Header() {
           </CartSheet>
            
           {!isClient ? (
-             <div className='w-20 h-10'></div>
+             <Skeleton className="h-10 w-20" />
           ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -112,9 +114,9 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link href="/login">
-              <Button>Login</Button>
-            </Link>
+            <Button asChild>
+              <Link href="/login">Login</Link>
+            </Button>
           )}
 
           <Link href="/admin/login">
@@ -122,7 +124,6 @@ export function Header() {
               <Shield className="h-6 w-6" />
             </Button>
           </Link>
-
 
           <div className="md:hidden">
             <Sheet>
