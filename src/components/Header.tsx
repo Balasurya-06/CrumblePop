@@ -32,11 +32,11 @@ export function Header() {
   const [user, setUser] = useState<{name: string} | null>(null);
 
   useEffect(() => {
-    setIsClient(true);
     const loggedInUser = localStorage.getItem("loggedInUser");
     if (loggedInUser) {
       setUser(JSON.parse(loggedInUser));
     }
+    setIsClient(true);
   }, []);
 
   const handleLogout = () => {
@@ -81,7 +81,9 @@ export function Header() {
             </Button>
           </CartSheet>
            
-          {isClient && user ? (
+          {!isClient ? (
+             <div className='w-20 h-10'></div>
+          ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -103,11 +105,11 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : isClient ? (
+          ) : (
             <Link href="/login">
               <Button>Login</Button>
             </Link>
-           ) : <div className='w-20 h-10'></div>}
+           )}
 
             <Link href="/admin/login">
               <Button variant="ghost" size="icon" aria-label="Admin Login">
