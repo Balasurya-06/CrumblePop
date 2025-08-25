@@ -22,18 +22,16 @@ export function CartSheet({ children }: CartSheetProps) {
     setIsClient(true);
   }, []);
 
-  if (!isClient) {
-    return <>{children}</>;
-  }
+  const cartTotalItems = totalItems();
   
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent className="flex w-full flex-col sm:max-w-md">
         <SheetHeader>
-          <SheetTitle className="text-2xl">Your Cart ({totalItems()})</SheetTitle>
+          <SheetTitle className="text-2xl">Your Cart ({isClient ? cartTotalItems : 0})</SheetTitle>
         </SheetHeader>
-        {items.length > 0 ? (
+        {isClient && items.length > 0 ? (
           <>
             <ScrollArea className="flex-grow pr-4">
               <div className="flex flex-col gap-4 py-4">
