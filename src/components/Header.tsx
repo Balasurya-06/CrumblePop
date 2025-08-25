@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Cake, Menu, ShoppingBag, X } from 'lucide-react';
+import { Cake, Menu, ShoppingBag, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/hooks/use-cart-store';
 import { CartSheet } from './CartSheet';
@@ -12,6 +12,7 @@ const navLinks = [
   { href: '/menu', label: 'Menu' },
   { href: '/about', label: 'About Us' },
   { href: '/contact', label: 'Contact' },
+  { href: '/generate', label: 'Generate', icon: <Sparkles className="h-4 w-4" /> },
 ];
 
 export function Header() {
@@ -31,8 +32,8 @@ export function Header() {
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-              {link.label}
+            <Link key={link.href} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground flex items-center gap-1">
+              {link.icon} {link.label}
             </Link>
           ))}
         </nav>
@@ -57,8 +58,8 @@ export function Header() {
               <SheetContent side="right">
                 <nav className="flex flex-col gap-6 pt-8">
                   {navLinks.map((link) => (
-                    <Link key={link.href} href={link.href} className="text-lg font-medium text-foreground transition-colors hover:text-primary">
-                      {link.label}
+                    <Link key={link.href} href={link.href} className="text-lg font-medium text-foreground transition-colors hover:text-primary flex items-center gap-2">
+                      {link.icon} {link.label}
                     </Link>
                   ))}
                 </nav>
