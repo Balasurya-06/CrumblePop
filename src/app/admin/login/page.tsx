@@ -18,8 +18,8 @@ import { useToast } from "@/hooks/use-toast";
 export default function AdminLoginPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin1@gmail.com");
+  const [password, setPassword] = useState("amd123");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();

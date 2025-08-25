@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Cake, Menu, ShoppingBag, X, User, LogOut } from 'lucide-react';
+import { Cake, Menu, ShoppingBag, X, User, LogOut, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/hooks/use-cart-store';
 import { CartSheet } from './CartSheet';
@@ -106,6 +106,13 @@ export function Header() {
               <Button>Login</Button>
             </Link>
            )}
+
+            <Link href="/admin/login">
+              <Button variant="ghost" size="icon" aria-label="Admin Login">
+                <Shield className="h-6 w-6" />
+              </Button>
+            </Link>
+
 
           <div className="md:hidden">
             <Sheet>
