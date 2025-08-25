@@ -24,7 +24,7 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Hardcoded credentials for simplicity
-    if (email === "admin@crumblepop.com" && password === "password") {
+    if (email === "admin1@gmail.com" && password === "amd123") {
       localStorage.setItem("isAdmin", "true");
       toast({
         title: "Login Successful",
