@@ -32,6 +32,7 @@ export function Header() {
   const [user, setUser] = useState<{name: string, email: string} | null>(null);
 
   useEffect(() => {
+    // This effect runs only on the client
     const loggedInUser = localStorage.getItem("loggedInUser");
     if (loggedInUser) {
       setUser(JSON.parse(loggedInUser));
@@ -118,11 +119,9 @@ export function Header() {
              <div className='w-20 h-10'></div>
            )}
 
-            <Link href="/admin/login">
-              <Button variant="ghost" size="icon" aria-label="Admin Login">
-                <Shield className="h-6 w-6" />
-              </Button>
-            </Link>
+            <Button variant="ghost" size="icon" aria-label="Admin Login" onClick={() => router.push('/admin/login')}>
+              <Shield className="h-6 w-6" />
+            </Button>
 
 
           <div className="md:hidden">
