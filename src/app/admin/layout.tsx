@@ -14,7 +14,7 @@ export default function AdminLayout({
   useEffect(() => {
     const isAdmin = localStorage.getItem("isAdmin") === "true";
     if (!isAdmin) {
-      router.replace("/login");
+      router.replace("/admin/login");
     } else {
       setIsAuth(true);
     }

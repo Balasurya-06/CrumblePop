@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
@@ -24,18 +23,14 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find(
-      (u: any) => u.email === email && u.password === password
-    );
-
-    if (user) {
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
+    // Hardcoded credentials for simplicity
+    if (email === "admin1@gmail.com" && password === "amd123") {
+      localStorage.setItem("isAdmin", "true");
       toast({
         title: "Login Successful",
-        description: "Welcome back!",
+        description: "Redirecting to admin dashboard...",
       });
-      router.push("/");
+      router.push("/admin/dashboard");
     } else {
       toast({
         variant: "destructive",
@@ -49,9 +44,9 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-[80vh]">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">User Login</CardTitle>
+          <CardTitle className="text-2xl">Admin Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account.
+            Enter your credentials to access the admin dashboard.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
@@ -78,16 +73,10 @@ export default function LoginPage() {
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col">
+          <CardFooter>
             <Button type="submit" className="w-full">
               Sign in
             </Button>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/signup" className="underline">
-                Sign up
-              </Link>
-            </div>
           </CardFooter>
         </form>
       </Card>
