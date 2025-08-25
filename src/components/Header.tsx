@@ -28,7 +28,7 @@ const navLinks = [
 export function Header() {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const totalItems = useCartStore((state) => state.totalItems());
+  const { totalItems } = useCartStore();
   const [user, setUser] = useState<{name: string} | null>(null);
 
   useEffect(() => {
@@ -53,6 +53,8 @@ export function Header() {
     return name.substring(0, 2);
   }
 
+  const cartItemCount = totalItems();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -71,9 +73,9 @@ export function Header() {
           <CartSheet>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingBag className="h-6 w-6" />
-              {isClient && totalItems > 0 && (
+              {isClient && cartItemCount > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                  {totalItems}
+                  {cartItemCount}
                 </span>
               )}
             </Button>
@@ -101,11 +103,11 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
+          ) : isClient ? (
             <Link href="/login">
               <Button>Login</Button>
             </Link>
-           )}
+           ) : <div className='w-20 h-10'></div>}
 
             <Link href="/admin/login">
               <Button variant="ghost" size="icon" aria-label="Admin Login">
