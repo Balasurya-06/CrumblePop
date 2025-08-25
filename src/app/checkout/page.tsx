@@ -34,10 +34,13 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     setIsClient(true);
-    if (totalItems() === 0) {
+  }, []);
+
+  useEffect(() => {
+    if (isClient && totalItems() === 0) {
       router.replace('/menu');
     }
-  }, [totalItems, router]);
+  }, [isClient, totalItems, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
