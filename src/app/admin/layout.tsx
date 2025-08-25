@@ -14,16 +14,14 @@ export default function AdminLayout({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const isAdmin = localStorage.getItem("isAdmin") === "true";
-      if (!isAdmin) {
-        router.replace("/admin/login");
-      } else {
-        setIsAuth(true);
-      }
-      setIsLoading(false);
-    };
-    checkAuth();
+    // This effect runs only on the client
+    const isAdmin = localStorage.getItem("isAdmin") === "true";
+    if (!isAdmin) {
+      router.replace("/admin/login");
+    } else {
+      setIsAuth(true);
+    }
+    setIsLoading(false);
   }, [router]);
 
   if (isLoading) {
@@ -41,7 +39,7 @@ export default function AdminLayout({
   }
 
   if (!isAuth) {
-    return null; // or a login redirect component, router.replace handles it
+    return null; // Don't render anything while redirecting
   }
 
   return <>{children}</>;

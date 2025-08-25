@@ -61,10 +61,18 @@ export default function CheckoutPage() {
     router.push("/order-confirmation");
   }
 
-  if (!isClient || items.length === 0) {
+  if (!isClient) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <p>Loading or redirecting...</p>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+  
+  if (items.length === 0) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p>Redirecting to menu...</p>
       </div>
     );
   }
