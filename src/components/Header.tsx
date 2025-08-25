@@ -12,7 +12,6 @@ const navLinks = [
   { href: '/menu', label: 'Menu' },
   { href: '/about', label: 'About Us' },
   { href: '/contact', label: 'Contact' },
-  { href: '/generate', label: 'Generate', icon: <Sparkles className="h-4 w-4" /> },
 ];
 
 export function Header() {
