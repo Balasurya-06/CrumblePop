@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -15,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCartStore } from "@/hooks/use-cart-store";
+import { useOrderStore } from "@/hooks/use-order-store";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -29,6 +31,7 @@ const formSchema = z.object({
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart, totalItems } = useCartStore();
+  const addOrder = useOrderStore((state) => state.addOrder);
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
@@ -52,13 +55,16 @@ export default function CheckoutPage() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Order Placed:", {
+    const orderId = `CP-${Date.now()}`;
+    addOrder({
+      id: orderId,
       customer: values,
-      items,
+      items: items,
       total: totalPrice(),
+      date: new Date().toISOString(),
     });
     clearCart();
-    router.push("/order-confirmation");
+    router.push(`/order-confirmation?orderId=${orderId}`);
   }
 
   if (!isClient) {

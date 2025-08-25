@@ -1,18 +1,16 @@
+
 "use client";
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function OrderConfirmationPage() {
-  const [orderId, setOrderId] = useState('');
-
-  useEffect(() => {
-    // Generate order ID on the client-side to avoid hydration mismatch
-    setOrderId(`CP-${Math.floor(Math.random() * 90000) + 10000}`);
-  }, []);
+function OrderConfirmationContent() {
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get('orderId');
 
   return (
     <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-[60vh]">
@@ -37,4 +35,12 @@ export default function OrderConfirmationPage() {
       </Card>
     </div>
   );
+}
+
+export default function OrderConfirmationPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <OrderConfirmationContent />
+        </Suspense>
+    )
 }

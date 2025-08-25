@@ -1,3 +1,4 @@
+
 export type ProductSize = {
   name: string;
   price: number;
@@ -21,4 +22,16 @@ export type CartItem = {
   quantity: number;
   price: number;
   image: string;
+};
+
+export type Order = {
+  id: string;
+  customer: {
+    name: string;
+    phone: string;
+    address: string;
+  };
+  items: CartItem[];
+  total: number;
+  date: string;
 };
