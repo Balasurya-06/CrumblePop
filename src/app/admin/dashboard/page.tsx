@@ -1,9 +1,9 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Package, Users, CreditCard, CheckCircle, Link as LinkIcon } from 'lucide-react';
+import { DollarSign, Package, Users, CreditCard, CheckCircle, Link as LinkIcon, ChevronDown, ChevronUp } from 'lucide-react';
 import { useOrderStore } from "@/hooks/use-order-store";
 import type { Order } from "@/lib/types";
 import {
@@ -19,6 +19,8 @@ import { useProductStore } from "@/hooks/use-product-store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import * as Collapsible from '@radix-ui/react-collapsible';
+import Image from "next/image";
 
 function DashboardSkeleton() {
     return (
@@ -66,9 +68,127 @@ function DashboardSkeleton() {
     );
 }
 
+function OrderRow({ order }: { order: Order }) {
+    const { updateOrderStatus } = useOrderStore();
+    const [isOpen, setIsOpen] = useState(false);
+    
+    const handleAcceptOrder = (order: Order) => {
+        updateOrderStatus(order.id, 'Accepted');
+        const message = `Your order *${order.id}* has been approved! We will deliver it shortly. Thank you for choosing CrumblePop!`;
+        const whatsappUrl = `https://wa.me/91${order.customer.phone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
+    const handleMarkAsDelivered = (order: Order) => {
+        updateOrderStatus(order.id, 'Delivered');
+        const message = `Your order *${order.id}* has been dispatched from the bakery! It will reach you soon. Thank you for choosing CrumblePop!`;
+        const whatsappUrl = `https://wa.me/91${order.customer.phone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+    
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+    }
+
+    return (
+        <Collapsible.Root asChild>
+            <Fragment>
+                <Collapsible.Trigger asChild>
+                    <TableRow className="cursor-pointer">
+                        <TableCell>
+                            <div className="flex items-center">
+                                <Badge variant="outline">{order.id}</Badge>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 ml-2">
+                                    {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                </Button>
+                            </div>
+                        </TableCell>
+                        <TableCell>
+                            <div className="font-medium">{order.customer.name}</div>
+                            <div className="text-sm text-muted-foreground">{order.customer.phone}</div>
+                        </TableCell>
+                        <TableCell>{order.items.reduce((acc, item) => acc + item.quantity, 0)}</TableCell>
+                        <TableCell>
+                            <a href={order.paymentScreenshot} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline inline-flex items-center">
+                                <LinkIcon className="h-4 w-4 mr-1" />
+                                View
+                            </a>
+                        </TableCell>
+                        <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                            <Badge className={cn({
+                                'bg-yellow-500 text-white': order.status === 'Pending',
+                                'bg-blue-500 text-white': order.status === 'Accepted',
+                                'bg-red-500 text-white': order.status === 'Declined',
+                                'bg-green-500 text-white': order.status === 'Delivered',
+                            })}>
+                                {order.status}
+                            </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                        {order.status === 'Pending' ? (
+                            <div className="flex gap-2 justify-end">
+                                <Button size="sm" onClick={() => handleAcceptOrder(order)}>Accept</Button>
+                                <Button size="sm" variant="destructive" onClick={() => updateOrderStatus(order.id, 'Declined')}>Decline</Button>
+                            </div>
+                        ) : order.status === 'Accepted' ? (
+                            <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleMarkAsDelivered(order)}>
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                                Mark as Delivered
+                            </Button>
+                        ) : (
+                            <span>-</span>
+                        )}
+                        </TableCell>
+                    </TableRow>
+                </Collapsible.Trigger>
+                 <Collapsible.Content asChild>
+                    <tr className="bg-muted/50">
+                        <TableCell colSpan={7} className="p-0">
+                           <div className="p-4">
+                                <h4 className="font-bold mb-2">Order Items:</h4>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead className="w-[80px]">Item</TableHead>
+                                            <TableHead>Details</TableHead>
+                                            <TableHead className="text-center">Quantity</TableHead>
+                                            <TableHead className="text-right">Price</TableHead>
+                                            <TableHead className="text-right">Total</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {order.items.map(item => (
+                                            <TableRow key={item.id}>
+                                                <TableCell>
+                                                    <Image src={item.image} alt={item.name} width={60} height={60} className="rounded-md" />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <p className="font-medium">{item.name}</p>
+                                                    <p className="text-sm text-muted-foreground">{item.size}</p>
+                                                </TableCell>
+                                                <TableCell className="text-center">{item.quantity}</TableCell>
+                                                <TableCell className="text-right">{formatCurrency(item.price)}</TableCell>
+                                                <TableCell className="text-right">{formatCurrency(item.price * item.quantity)}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="text-right font-bold">Order Total</TableCell>
+                                            <TableCell className="text-right font-bold">{formatCurrency(order.total)}</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                           </div>
+                        </TableCell>
+                    </tr>
+                </Collapsible.Content>
+            </Fragment>
+        </Collapsible.Root>
+    )
+}
 
 export default function AdminDashboard() {
-    const { orders, totalRevenue, totalOrders, updateOrderStatus } = useOrderStore();
+    const { orders, totalRevenue, totalOrders } = useOrderStore();
     const { products } = useProductStore();
     const [isClient, setIsClient] = useState(false);
     const [totalCustomers, setTotalCustomers] = useState(0);
@@ -84,20 +204,6 @@ export default function AdminDashboard() {
         }
     }, [orders, isClient]);
     
-    const handleAcceptOrder = (order: Order) => {
-        updateOrderStatus(order.id, 'Accepted');
-        const message = `Your order *${order.id}* has been approved! We will deliver it shortly. Thank you for choosing CrumblePop!`;
-        const whatsappUrl = `https://wa.me/91${order.customer.phone}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-    }
-
-    const handleMarkAsDelivered = (order: Order) => {
-        updateOrderStatus(order.id, 'Delivered');
-        const message = `Your order *${order.id}* has been dispatched from the bakery! It will reach you soon. Thank you for choosing CrumblePop!`;
-        const whatsappUrl = `https://wa.me/91${order.customer.phone}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-    }
-
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
     }
@@ -173,48 +279,7 @@ export default function AdminDashboard() {
                            </TableHeader>
                            <TableBody>
                                {orders.slice(0, 10).map((order: Order) => (
-                                   <TableRow key={order.id}>
-                                       <TableCell>
-                                            <Badge variant="outline">{order.id}</Badge>
-                                       </TableCell>
-                                       <TableCell>
-                                           <div className="font-medium">{order.customer.name}</div>
-                                           <div className="text-sm text-muted-foreground">{order.customer.phone}</div>
-                                       </TableCell>
-                                       <TableCell>{order.items.reduce((acc, item) => acc + item.quantity, 0)}</TableCell>
-                                       <TableCell>
-                                           <a href={order.paymentScreenshot} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline inline-flex items-center">
-                                                <LinkIcon className="h-4 w-4 mr-1" />
-                                                View
-                                           </a>
-                                       </TableCell>
-                                       <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
-                                       <TableCell>
-                                            <Badge className={cn({
-                                                'bg-yellow-500 text-white': order.status === 'Pending',
-                                                'bg-blue-500 text-white': order.status === 'Accepted',
-                                                'bg-red-500 text-white': order.status === 'Declined',
-                                                'bg-green-500 text-white': order.status === 'Delivered',
-                                            })}>
-                                                {order.status}
-                                            </Badge>
-                                       </TableCell>
-                                       <TableCell className="text-right">
-                                        {order.status === 'Pending' ? (
-                                            <div className="flex gap-2 justify-end">
-                                                <Button size="sm" onClick={() => handleAcceptOrder(order)}>Accept</Button>
-                                                <Button size="sm" variant="destructive" onClick={() => updateOrderStatus(order.id, 'Declined')}>Decline</Button>
-                                            </div>
-                                        ) : order.status === 'Accepted' ? (
-                                            <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleMarkAsDelivered(order)}>
-                                                <CheckCircle className="mr-2 h-4 w-4" />
-                                                Mark as Delivered
-                                            </Button>
-                                        ) : (
-                                            <span>-</span>
-                                        )}
-                                       </TableCell>
-                                   </TableRow>
+                                   <OrderRow key={order.id} order={order} />
                                ))}
                            </TableBody>
                        </Table>
