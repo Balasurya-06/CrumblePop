@@ -30,16 +30,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useProductStore } from "@/hooks/use-product-store";
-import type { Product, ProductSize } from "@/lib/types";
-import { useEffect, useRef } from "react";
-import { PlusCircle, Trash2 } from "lucide-react";
+import type { Product } from "@/lib/types";
+import { useEffect, useRef, useState } from "react";
+import { PlusCircle, Trash2, Upload } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
+import Image from "next/image";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
   category: z.enum(["Cakes", "Brownies"]),
-  images: z.string().url("Please enter a valid image URL.").array().min(1, "At least one image is required."),
+  images: z.string().array().min(1, "At least one image is required."),
   sizes: z.array(z.object({
     name: z.string().min(1, "Size name cannot be empty."),
     price: z.coerce.number().min(0, "Price must be a positive number."),
@@ -55,9 +57,61 @@ interface ProductFormProps {
   product: Product | null;
 }
 
+const ImageUploader = ({ value, onChange, onRemove }: { value: string, onChange: (dataUrl: string) => void, onRemove: () => void }) => {
+    const { toast } = useToast();
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                toast({
+                    variant: "destructive",
+                    title: "File too large",
+                    description: "Please upload an image under 2MB.",
+                });
+                return;
+            }
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                onChange(base64String);
+            };
+            reader.onerror = (error) => {
+                console.error("Error reading file:", error);
+                toast({
+                    variant: "destructive",
+                    title: "File read error",
+                    description: "Could not process the uploaded file. Please try again.",
+                });
+            };
+        }
+    };
+
+    return (
+        <div className="flex items-center gap-2">
+            {value ? (
+                <div className="relative group">
+                    <Image src={value} alt="Product preview" width={100} height={100} className="rounded-md object-cover w-24 h-24" />
+                    <Button type="button" variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity" onClick={onRemove}>
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
+                </div>
+            ) : (
+                <div className="flex items-center justify-center w-full">
+                   <label htmlFor="image-upload" className="flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-muted/80">
+                        <div className="flex flex-col items-center justify-center">
+                            <Upload className="w-8 h-8 text-muted-foreground" />
+                        </div>
+                        <Input id="image-upload" type="file" className="hidden" onChange={handleFileChange} accept="image/png, image/jpeg, image/gif" />
+                    </label>
+                </div> 
+            )}
+        </div>
+    )
+}
+
 export function ProductForm({ isOpen, setIsOpen, product }: ProductFormProps) {
   const { addProduct, updateProduct } = useProductStore();
-  const lastImageInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -65,49 +119,45 @@ export function ProductForm({ isOpen, setIsOpen, product }: ProductFormProps) {
       name: "",
       description: "",
       category: "Cakes",
-      images: [""],
+      images: [],
       sizes: [{ name: "", price: 0 }],
       isBestseller: false,
     },
   });
-
+  
   const { fields: sizeFields, append: appendSize, remove: removeSize } = useFieldArray({
     control: form.control,
     name: "sizes",
   });
   
-  const { fields: imageFields, append: appendImage, remove: removeImage } = useFieldArray({
+  const { fields: imageFields, append: appendImage, remove: removeImage, update: updateImage } = useFieldArray({
     control: form.control,
     name: "images",
   });
 
   useEffect(() => {
-    if (product) {
-      form.reset({
-        name: product.name,
-        description: product.description,
-        category: product.category,
-        images: product.images,
-        sizes: product.sizes,
-        isBestseller: product.isBestseller || false,
-      });
-    } else {
-      form.reset({
-        name: "",
-        description: "",
-        category: "Cakes",
-        images: [""],
-        sizes: [{ name: "", price: 0 }],
-        isBestseller: false,
-      });
+    if (isOpen) {
+        if (product) {
+        form.reset({
+            name: product.name,
+            description: product.description,
+            category: product.category,
+            images: product.images,
+            sizes: product.sizes,
+            isBestseller: product.isBestseller || false,
+        });
+        } else {
+        form.reset({
+            name: "",
+            description: "",
+            category: "Cakes",
+            images: [],
+            sizes: [{ name: "", price: 0 }],
+            isBestseller: false,
+        });
+        }
     }
   }, [product, form, isOpen]);
-
-  useEffect(() => {
-    if (imageFields.length > 1) {
-      lastImageInputRef.current?.focus();
-    }
-  }, [imageFields.length]);
 
 
   const onSubmit = (data: ProductFormValues) => {
@@ -180,37 +230,31 @@ export function ProductForm({ isOpen, setIsOpen, product }: ProductFormProps) {
             
             <div>
               <FormLabel>Images</FormLabel>
-              <div className="space-y-2 mt-2">
-                {imageFields.map((field, index) => (
-                  <FormField
-                    key={field.id}
-                    control={form.control}
-                    name={`images.${index}`}
-                    render={({ field: { ref, ...fieldProps } }) => (
-                      <FormItem>
-                        <div className="flex items-center gap-2">
-                           <FormControl>
-                            <Input 
-                                placeholder="https://example.com/image.png" 
-                                {...fieldProps} 
-                                ref={index === imageFields.length - 1 ? lastImageInputRef : ref}
-                            />
-                           </FormControl>
-                           {imageFields.length > 1 && (
-                            <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)}>
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
-                           )}
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              <div className="mt-2 flex flex-wrap gap-2">
+                 {imageFields.map((field, index) => (
+                    <FormField
+                        key={field.id}
+                        control={form.control}
+                        name={`images.${index}`}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <ImageUploader 
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        onRemove={() => removeImage(index)}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 ))}
+                <Button type="button" variant="outline" size="icon" className="h-24 w-24" onClick={() => appendImage("")}>
+                     <PlusCircle className="h-8 w-8" />
+                </Button>
               </div>
-              <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => appendImage("", { shouldFocus: true })}>
-                 <PlusCircle className="mr-2 h-4 w-4" /> Add Image
-              </Button>
+               <FormMessage>{form.formState.errors.images?.message}</FormMessage>
             </div>
 
             <div>
