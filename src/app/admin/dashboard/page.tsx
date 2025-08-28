@@ -74,9 +74,14 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         setIsClient(true);
-        const uniqueCustomers = new Set(orders.map(order => order.customer.phone));
-        setTotalCustomers(uniqueCustomers.size);
-    }, [orders]);
+    }, []);
+
+    useEffect(() => {
+        if (isClient) {
+            const uniqueCustomers = new Set(orders.map(order => order.customer.phone));
+            setTotalCustomers(uniqueCustomers.size);
+        }
+    }, [orders, isClient]);
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
@@ -164,7 +169,7 @@ export default function AdminDashboard() {
                                             <Badge variant={
                                                 order.status === 'Pending' ? 'secondary' :
                                                 order.status === 'Accepted' ? 'default' :
-                                                'destructive'
+                                                order.status === 'Declined' ? 'destructive' : 'outline'
                                             }>
                                                 {order.status}
                                             </Badge>
