@@ -10,6 +10,7 @@ export function Footer() {
               <Link href="/menu" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Bakery</Link>
               <Link href="/about" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">About Us</Link>
               <Link href="/contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Contact</Link>
+              <Link href="/admin/login" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Admin</Link>
            </div>
         </div>
       </div>
