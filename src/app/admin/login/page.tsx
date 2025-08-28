@@ -31,7 +31,8 @@ export default function AdminLoginPage() {
         title: "Login Successful",
         description: "Redirecting to admin dashboard...",
       });
-      router.push("/admin/dashboard");
+      // Use window.location to force a full page reload
+      window.location.href = "/admin/dashboard";
     } else {
       toast({
         variant: "destructive",

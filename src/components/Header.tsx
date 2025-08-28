@@ -23,7 +23,7 @@ import { Skeleton } from './ui/skeleton';
 
 const navLinksLeft = [
   { href: '/menu', label: 'Bakery' },
-  { href: '/menu?category=Recipes', label: 'Recipes' },
+  { href: '/menu?category=Brownies', label: 'Brownies' },
 ];
 
 const navLinksRight = [
@@ -36,6 +36,7 @@ export function Header() {
   const [isClient, setIsClient] = useState(false);
   const { totalItems } = useCartStore();
   const [user, setUser] = useState<{name: string, email: string} | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -43,11 +44,15 @@ export function Header() {
     if (loggedInUser) {
       setUser(JSON.parse(loggedInUser));
     }
+    const adminStatus = localStorage.getItem("isAdmin") === "true";
+    setIsAdmin(adminStatus);
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("isAdmin");
     setUser(null);
+    setIsAdmin(false);
     router.push("/");
   };
 
@@ -148,14 +153,18 @@ export function Header() {
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                 <DropdownMenuItem onClick={() => router.push('/admin/products')}>
-                  <Package className="mr-2 h-4 w-4" />
-                  <span>Products</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
-                  <Shield className="mr-2 h-4 w-4" />
-                  <span>Admin</span>
-                </DropdownMenuItem>
+                {isAdmin && (
+                  <>
+                    <DropdownMenuItem onClick={() => router.push('/admin/products')}>
+                      <Package className="mr-2 h-4 w-4" />
+                      <span>Products</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
+                      <Shield className="mr-2 h-4 w-4" />
+                      <span>Admin</span>
+                    </DropdownMenuItem>
+                  </>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
@@ -164,11 +173,21 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild>
-              <Link href="/login">
-                <User className="h-6 w-6" />
-              </Link>
-            </Button>
+             <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                 <Button variant="ghost" size="icon">
+                  <User className="h-6 w-6" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48" align="end" forceMount>
+                 <DropdownMenuItem onClick={() => router.push('/login')}>
+                  <span>User Login</span>
+                </DropdownMenuItem>
+                 <DropdownMenuItem onClick={() => router.push('/admin/login')}>
+                  <span>Admin Login</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
       </div>
