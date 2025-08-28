@@ -32,7 +32,7 @@ export default function AdminLayout({
 
   useEffect(() => {
     // This check runs only on the client
-    const isAdmin = localStorage.getItem("isAdmin") === "true";
+    const isAdmin = sessionStorage.getItem("isAdmin") === "true";
     if (isAdmin) {
       setIsAuth(true);
     } else if (pathname !== "/admin/login") {

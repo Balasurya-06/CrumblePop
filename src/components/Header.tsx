@@ -48,7 +48,7 @@ export function Header() {
       } else {
         setUser(null);
       }
-      const adminStatus = localStorage.getItem("isAdmin") === "true";
+      const adminStatus = sessionStorage.getItem("isAdmin") === "true";
       setIsAdmin(adminStatus);
     } catch (error) {
       console.error("Failed to access localStorage:", error);
@@ -59,7 +59,7 @@ export function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("isAdmin");
+    sessionStorage.removeItem("isAdmin");
     setUser(null);
     setIsAdmin(false);
     router.push("/");
@@ -105,8 +105,7 @@ export function Header() {
                  <SheetClose asChild>
                     <Link href="/" className="flex items-center gap-2 mb-8">
                         <span className="text-3xl font-bold font-headline text-accent">CrumblePop</span>
-                    </Link>
-                 </SheetClose>
+                    </Link>                 </SheetClose>
                 <nav className="flex flex-col gap-6">
                   {[...navLinksLeft, ...navLinksRight].map((link) => (
                     <SheetClose asChild key={link.label}>

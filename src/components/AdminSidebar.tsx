@@ -18,7 +18,7 @@ export function AdminSidebar() {
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("isAdmin");
+    sessionStorage.removeItem("isAdmin");
     router.replace("/");
   }
 

@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
     e.preventDefault();
     // Hardcoded credentials for simplicity
     if (username === "CrumblePop" && password === "xyndrix") {
-      localStorage.setItem("isAdmin", "true");
+      sessionStorage.setItem("isAdmin", "true");
       toast({
         title: "Login Successful",
         description: "Redirecting to admin dashboard...",
