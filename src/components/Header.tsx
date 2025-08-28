@@ -187,9 +187,6 @@ export function Header() {
                  <DropdownMenuItem onClick={() => router.push('/login')}>
                   <span>User Login</span>
                 </DropdownMenuItem>
-                 <DropdownMenuItem onClick={() => router.push('/admin/login')}>
-                  <span>Admin Login</span>
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
