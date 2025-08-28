@@ -38,7 +38,7 @@ export const useOrderStore = create<OrderState>()(
 
       totalRevenue: () => {
         return get().orders
-          .filter(order => order.status === 'Accepted')
+          .filter(order => order.status === 'Accepted' || order.status === 'Delivered')
           .reduce((total, order) => total + order.total, 0);
       },
     }),
