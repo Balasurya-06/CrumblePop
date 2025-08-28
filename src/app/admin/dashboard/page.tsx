@@ -162,6 +162,7 @@ export default function AdminDashboard() {
                        <Table>
                            <TableHeader>
                                <TableRow>
+                                   <TableHead>Order ID</TableHead>
                                    <TableHead>Customer</TableHead>
                                    <TableHead>Items</TableHead>
                                    <TableHead>Payment</TableHead>
@@ -173,6 +174,9 @@ export default function AdminDashboard() {
                            <TableBody>
                                {orders.slice(0, 10).map((order: Order) => (
                                    <TableRow key={order.id}>
+                                       <TableCell>
+                                            <Badge variant="outline">{order.id}</Badge>
+                                       </TableCell>
                                        <TableCell>
                                            <div className="font-medium">{order.customer.name}</div>
                                            <div className="text-sm text-muted-foreground">{order.customer.phone}</div>
