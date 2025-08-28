@@ -29,13 +29,11 @@ const navLinks = [
 
 export function Header() {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-  const { totalItems } = useCartStore();
   const [user, setUser] = useState<{name: string, email: string} | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // This logic now runs only on the client after the component has mounted
     setIsClient(true);
     try {
       const loggedInUser = localStorage.getItem("loggedInUser");
