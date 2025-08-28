@@ -23,12 +23,39 @@ type User = {
   email: string;
 };
 
+function ProfileSkeleton() {
+  return (
+    <div className="container mx-auto px-4 py-12">
+      <Card className="max-w-4xl mx-auto">
+        <CardHeader>
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-20 w-20 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-64" />
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+           <Skeleton className="h-8 w-40 mb-4" />
+           <div className="space-y-4">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+           </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const { orders } = useOrderStore();
   const [userOrders, setUserOrders] = useState<Order[]>([]);
   const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsClient(true);
@@ -38,11 +65,10 @@ export default function ProfilePage() {
     } else {
       const parsedUser = JSON.parse(loggedInUser);
       setUser(parsedUser);
-      // This is a simplification. In a real app, you'd fetch orders for this specific user from a backend.
-      // Here, we filter orders from the store based on the logged-in user's name.
       const currentUserOrders = orders.filter(order => order.customer.name === parsedUser.name);
       setUserOrders(currentUserOrders);
     }
+    setIsLoading(false);
   }, [router, orders]);
 
   const getUserInitials = (name: string) => {
@@ -55,29 +81,12 @@ export default function ProfilePage() {
       return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
   }
 
-  if (!isClient || !user) {
-    return (
-      <div className="container mx-auto px-4 py-12">
-        <Card className="max-w-4xl mx-auto">
-          <CardHeader>
-            <div className="flex items-center gap-4">
-              <Skeleton className="h-20 w-20 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-6 w-48" />
-                <Skeleton className="h-4 w-64" />
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-             <Skeleton className="h-8 w-40 mb-4" />
-             <div className="space-y-4">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-             </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+  if (!isClient || isLoading) {
+    return <ProfileSkeleton />;
+  }
+  
+  if (!user) {
+    return null; // or redirecting...
   }
 
   return (

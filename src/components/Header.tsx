@@ -44,11 +44,15 @@ export function Header() {
       const loggedInUser = localStorage.getItem("loggedInUser");
       if (loggedInUser) {
         setUser(JSON.parse(loggedInUser));
+      } else {
+        setUser(null);
       }
       const adminStatus = localStorage.getItem("isAdmin") === "true";
       setIsAdmin(adminStatus);
     } catch (error) {
       console.error("Failed to access localStorage:", error);
+      setUser(null);
+      setIsAdmin(false);
     }
   }, []);
 
@@ -58,6 +62,7 @@ export function Header() {
     setUser(null);
     setIsAdmin(false);
     router.push("/");
+    router.refresh();
   };
 
   const getUserInitials = (name: string) => {
@@ -159,10 +164,6 @@ export function Header() {
                 </DropdownMenuItem>
                 {isAdmin && (
                   <>
-                    <DropdownMenuItem onClick={() => router.push('/admin/products')}>
-                      <Package className="mr-2 h-4 w-4" />
-                      <span>Products</span>
-                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
                       <Shield className="mr-2 h-4 w-4" />
                       <span>Admin</span>
@@ -186,6 +187,9 @@ export function Header() {
               <DropdownMenuContent className="w-48" align="end" forceMount>
                  <DropdownMenuItem onClick={() => router.push('/login')}>
                   <span>User Login</span>
+                </DropdownMenuItem>
+                 <DropdownMenuItem onClick={() => router.push('/admin/login')}>
+                  <span>Admin Login</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

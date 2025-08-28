@@ -6,28 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminSidebar } from "@/components/AdminSidebar";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
-  const [isAuth, setIsAuth] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-    const isAdmin = localStorage.getItem("isAdmin") === "true";
-    if (isAdmin) {
-      setIsAuth(true);
-    } else if (pathname !== "/admin/login") {
-      router.replace("/admin/login");
-    }
-  }, [pathname, router]);
-
-  if (!isClient) {
-     return (
+function AdminLayoutSkeleton() {
+  return (
       <div className="flex h-screen items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
           <Skeleton className="h-12 w-12 rounded-full" />
@@ -37,15 +17,39 @@ export default function AdminLayout({
           </div>
         </div>
       </div>
-    );
+  );
+}
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsClient(true);
+    const isAdmin = localStorage.getItem("isAdmin") === "true";
+    if (isAdmin) {
+      setIsAuth(true);
+    } else if (pathname !== "/admin/login") {
+      router.replace("/admin/login");
+    }
+    setIsLoading(false);
+  }, [pathname, router]);
+
+  if (isLoading || !isClient) {
+     return <AdminLayoutSkeleton />;
   }
 
-  // Allow login page to render without the layout
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
 
-  // If authenticated, show the admin layout with sidebar
   if (isAuth) {
     return (
       <div className="flex min-h-screen">
@@ -57,6 +61,5 @@ export default function AdminLayout({
     );
   }
 
-  // While checking auth or redirecting, show nothing to prevent flashes
   return null;
 }
