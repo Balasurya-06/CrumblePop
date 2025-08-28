@@ -28,9 +28,10 @@ export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const { orders } = useOrderStore();
   const [userOrders, setUserOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     const loggedInUser = localStorage.getItem("loggedInUser");
     if (!loggedInUser) {
       router.replace("/login");
@@ -42,10 +43,10 @@ export default function ProfilePage() {
       const currentUserOrders = orders.filter(order => order.customer.name === parsedUser.name);
       setUserOrders(currentUserOrders);
     }
-    setIsLoading(false);
   }, [router, orders]);
 
   const getUserInitials = (name: string) => {
+    if (!name) return "";
     const names = name.split(' ');
     return names.length > 1 ? `${names[0][0]}${names[1][0]}` : name.substring(0, 2);
   };
@@ -54,7 +55,7 @@ export default function ProfilePage() {
       return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
   }
 
-  if (isLoading || !user) {
+  if (!isClient || !user) {
     return (
       <div className="container mx-auto px-4 py-12">
         <Card className="max-w-4xl mx-auto">

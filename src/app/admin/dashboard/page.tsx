@@ -79,7 +79,7 @@ export default function AdminDashboard() {
                  </div>
                  <Card>
                     <CardHeader><CardTitle>Recent Orders</CardTitle></CardHeader>
-                    <CardContent><p>Loading orders...</p></CardContent>
+                    <CardContent><Skeleton className="h-24 w-full" /></CardContent>
                  </Card>
             </div>
         )

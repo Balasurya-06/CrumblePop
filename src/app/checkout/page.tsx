@@ -109,9 +109,11 @@ export default function CheckoutPage() {
   }
   
   if (items.length === 0) {
+    // This part runs on the client, so it's safe to return something different
+    // from the server's initial render (which is the skeleton).
     return (
       <div className="flex h-screen items-center justify-center">
-        <p>Redirecting to menu...</p>
+        <p>Your cart is empty. Redirecting to menu...</p>
       </div>
     );
   }
