@@ -17,12 +17,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from './ui/skeleton';
 
 
-const navLinks = [
-  { href: '/menu', label: 'Menu' },
+const navLinksLeft = [
+  { href: '/menu', label: 'Bakery' },
+  { href: '/menu', label: 'Recipes' },
+];
+
+const navLinksRight = [
   { href: '/about', label: 'About Us' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -34,12 +38,11 @@ export function Header() {
   const [user, setUser] = useState<{name: string, email: string} | null>(null);
 
   useEffect(() => {
-    // This effect runs only on the client
+    setIsClient(true);
     const loggedInUser = localStorage.getItem("loggedInUser");
     if (loggedInUser) {
       setUser(JSON.parse(loggedInUser));
     }
-    setIsClient(true);
   }, []);
 
   const handleLogout = () => {
@@ -59,20 +62,50 @@ export function Header() {
   const cartItemCount = totalItems();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Cake className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold font-headline text-accent">CrumblePop</span>
-        </Link>
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <nav className="hidden items-center gap-6 md:flex">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground flex items-center gap-1">
+          {navLinksLeft.map((link) => (
+            <Link key={link.href} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
               {link.label}
             </Link>
           ))}
         </nav>
+        
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <Link href="/" className="flex items-center gap-2">
+                <span className="text-3xl font-bold font-headline text-accent">CrumblePop</span>
+            </Link>
+        </div>
+
+        <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left">
+                <nav className="flex flex-col gap-6 pt-8">
+                  {[...navLinksLeft, ...navLinksRight].map((link) => (
+                    <Link key={link.href} href={link.href} className="text-lg font-medium text-foreground transition-colors hover:text-primary">
+                       {link.label}
+                    </Link>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
+        </div>
+        
         <div className="flex items-center gap-2">
+            <nav className="hidden items-center gap-6 md:flex">
+              {navLinksRight.map((link) => (
+                <Link key={link.href} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
           <CartSheet>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingBag className="h-6 w-6" />
@@ -85,12 +118,12 @@ export function Header() {
           </CartSheet>
            
           {!isClient ? (
-             <Skeleton className="h-10 w-20" />
+             <Skeleton className="h-10 w-10 rounded-full" />
           ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10">
                     <AvatarFallback>{getUserInitials(user.name)}</AvatarFallback>
                   </Avatar>
                 </Button>
@@ -107,6 +140,11 @@ export function Header() {
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
+                  <Shield className="mr-2 h-4 w-4" />
+                  <span>Admin</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
@@ -114,35 +152,10 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild>
-              <Link href="/login">Login</Link>
+            <Button asChild variant="ghost" onClick={() => router.push('/login')}>
+              <User className="h-6 w-6" />
             </Button>
           )}
-
-          <Link href="/admin/login">
-            <Button variant="ghost" size="icon" aria-label="Admin Login">
-              <Shield className="h-6 w-6" />
-            </Button>
-          </Link>
-
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right">
-                <nav className="flex flex-col gap-6 pt-8">
-                  {navLinks.map((link) => (
-                    <Link key={link.href} href={link.href} className="text-lg font-medium text-foreground transition-colors hover:text-primary flex items-center gap-2">
-                       {link.label}
-                    </Link>
-                  ))}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
         </div>
       </div>
     </header>

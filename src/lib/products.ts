@@ -3,7 +3,7 @@ import type { Product } from './types';
 const products: Product[] = [
   {
     id: 'cake-1',
-    name: 'Ferrero Rocher Cake',
+    name: 'Choco Fudge Fantasy',
     description: 'A decadent chocolate cake layered with hazelnut cream, crunchy wafer bits, and topped with Ferrero Rocher chocolates. A true indulgence.',
     category: 'Cakes',
     images: ['https://placehold.co/600x600.png'],
@@ -16,13 +16,37 @@ const products: Product[] = [
   },
   {
     id: 'cake-2',
-    name: 'Chocolate Truffle Cake',
+    name: 'Dark Chocolate Cake',
     description: 'Rich, moist chocolate sponge filled and frosted with a silky smooth chocolate truffle ganache. A classic choice for any celebration.',
     category: 'Cakes',
     images: ['https://placehold.co/600x600.png'],
     sizes: [
       { name: '0.5 kg', price: 550 },
       { name: '1 kg', price: 1000 },
+    ],
+    isBestseller: true,
+  },
+  {
+    id: 'brownie-1',
+    name: 'Almond Butter Cookie',
+    description: 'The ultimate brownie for chocolate lovers. Fudgy, dense, and packed with milk, white, and dark chocolate chunks.',
+    category: 'Brownies',
+    images: ['https://placehold.co/600x600.png'],
+    sizes: [
+      { name: 'Pack of 4', price: 400 },
+      { name: 'Pack of 8', price: 750 },
+    ],
+    isBestseller: true,
+  },
+  {
+    id: 'brownie-2',
+    name: 'Freshly Baked Croissants',
+    description: 'A classic fudgy brownie loaded with toasted walnuts for a satisfying crunch. The perfect balance of rich and nutty.',
+    category: 'Brownies',
+    images: ['https://placehold.co/600x600.png'],
+    sizes: [
+      { name: 'Pack of 4', price: 380 },
+      { name: 'Pack of 8', price: 720 },
     ],
     isBestseller: true,
   },
@@ -35,29 +59,6 @@ const products: Product[] = [
     sizes: [
       { name: '0.5 kg', price: 650 },
       { name: '1 kg', price: 1200 },
-    ],
-  },
-  {
-    id: 'brownie-1',
-    name: 'Triple Chocolate Brownie',
-    description: 'The ultimate brownie for chocolate lovers. Fudgy, dense, and packed with milk, white, and dark chocolate chunks.',
-    category: 'Brownies',
-    images: ['https://placehold.co/600x600.png'],
-    sizes: [
-      { name: 'Pack of 4', price: 400 },
-      { name: 'Pack of 8', price: 750 },
-    ],
-    isBestseller: true,
-  },
-  {
-    id: 'brownie-2',
-    name: 'Walnut Fudge Brownie',
-    description: 'A classic fudgy brownie loaded with toasted walnuts for a satisfying crunch. The perfect balance of rich and nutty.',
-    category: 'Brownies',
-    images: ['https://placehold.co/600x600.png'],
-    sizes: [
-      { name: 'Pack of 4', price: 380 },
-      { name: 'Pack of 8', price: 720 },
     ],
   },
   {
