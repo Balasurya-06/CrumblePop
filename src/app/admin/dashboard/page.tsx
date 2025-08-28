@@ -177,7 +177,7 @@ export default function AdminDashboard() {
                                        <TableCell className="text-right">
                                         {order.status === 'Pending' ? (
                                             <div className="flex gap-2 justify-end">
-                                                <Button size="sm" onClick={() => updateOrderStatus(order.id, 'Accepted')}>Approve</Button>
+                                                <Button size="sm" onClick={() => updateOrderStatus(order.id, 'Accepted')}>Accept</Button>
                                                 <Button size="sm" variant="destructive" onClick={() => updateOrderStatus(order.id, 'Declined')}>Decline</Button>
                                             </div>
                                         ) : (
