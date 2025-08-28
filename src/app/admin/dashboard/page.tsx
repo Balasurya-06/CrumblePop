@@ -91,7 +91,7 @@ function OrderRow({ order }: { order: Order }) {
     }
 
     return (
-        <Collapsible.Root asChild>
+        <Collapsible.Root asChild onOpenChange={setIsOpen}>
             <Fragment>
                 <Collapsible.Trigger asChild>
                     <TableRow className="cursor-pointer">
@@ -291,3 +291,5 @@ export default function AdminDashboard() {
         </div>
     );
 }
+
+    
