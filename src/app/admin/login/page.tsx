@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -18,13 +19,13 @@ import { useToast } from "@/hooks/use-toast";
 export default function AdminLoginPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [email, setEmail] = useState("admin1@gmail.com");
-  const [password, setPassword] = useState("amd123");
+  const [username, setUsername] = useState("CrumblePop");
+  const [password, setPassword] = useState("xyndrix");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Hardcoded credentials for simplicity
-    if (email === "admin1@gmail.com" && password === "amd123") {
+    if (username === "CrumblePop" && password === "xyndrix") {
       localStorage.setItem("isAdmin", "true");
       toast({
         title: "Login Successful",
@@ -35,7 +36,7 @@ export default function AdminLoginPage() {
       toast({
         variant: "destructive",
         title: "Login Failed",
-        description: "Invalid email or password.",
+        description: "Invalid username or password.",
       });
     }
   };
@@ -52,14 +53,14 @@ export default function AdminLoginPage() {
         <form onSubmit={handleLogin}>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
+                id="username"
+                type="text"
+                placeholder="Username"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="grid gap-2">
