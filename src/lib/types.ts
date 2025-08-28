@@ -1,4 +1,5 @@
 
+
 export type ProductSize = {
   name: string;
   price: number;
@@ -25,7 +26,7 @@ export type CartItem = {
 };
 
 export type Order = {
-  id: string;
+  id:string;
   customer: {
     name: string;
     phone: string;
@@ -35,4 +36,5 @@ export type Order = {
   total: number;
   date: string;
   status: 'Pending' | 'Accepted' | 'Declined' | 'Delivered';
+  paymentScreenshot: string; // as a data URI
 };

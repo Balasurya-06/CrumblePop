@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Package, Users, CreditCard, CheckCircle } from 'lucide-react';
+import { DollarSign, Package, Users, CreditCard, CheckCircle, Link as LinkIcon } from 'lucide-react';
 import { useOrderStore } from "@/hooks/use-order-store";
 import type { Order } from "@/lib/types";
 import {
@@ -164,7 +164,7 @@ export default function AdminDashboard() {
                                <TableRow>
                                    <TableHead>Customer</TableHead>
                                    <TableHead>Items</TableHead>
-                                   <TableHead>Total</TableHead>
+                                   <TableHead>Payment</TableHead>
                                    <TableHead>Date</TableHead>
                                    <TableHead>Status</TableHead>
                                    <TableHead className="text-right">Actions</TableHead>
@@ -178,7 +178,12 @@ export default function AdminDashboard() {
                                            <div className="text-sm text-muted-foreground">{order.customer.phone}</div>
                                        </TableCell>
                                        <TableCell>{order.items.reduce((acc, item) => acc + item.quantity, 0)}</TableCell>
-                                       <TableCell>{formatCurrency(order.total)}</TableCell>
+                                       <TableCell>
+                                           <a href={order.paymentScreenshot} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline inline-flex items-center">
+                                                <LinkIcon className="h-4 w-4 mr-1" />
+                                                View
+                                           </a>
+                                       </TableCell>
                                        <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
                                        <TableCell>
                                             <Badge className={cn({
