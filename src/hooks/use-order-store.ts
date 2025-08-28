@@ -37,7 +37,9 @@ export const useOrderStore = create<OrderState>()(
       },
 
       totalRevenue: () => {
-        return get().orders.reduce((total, order) => total + order.total, 0);
+        return get().orders
+          .filter(order => order.status === 'Accepted')
+          .reduce((total, order) => total + order.total, 0);
       },
     }),
     {
