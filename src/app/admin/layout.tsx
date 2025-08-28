@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminSidebar } from "@/components/AdminSidebar";
 
@@ -12,19 +12,25 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isAuth, setIsAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // This effect runs only on the client
     const isAdmin = localStorage.getItem("isAdmin") === "true";
-    if (!isAdmin) {
+    if (!isAdmin && pathname !== "/admin/login") {
       router.replace("/admin/login");
     } else {
       setIsAuth(true);
     }
     setIsLoading(false);
-  }, [router]);
+  }, [router, pathname]);
+
+  // Don't protect the login page itself
+  if (pathname === "/admin/login") {
+    return <main className="flex-1 bg-background">{children}</main>;
+  }
 
   if (isLoading) {
     return (
