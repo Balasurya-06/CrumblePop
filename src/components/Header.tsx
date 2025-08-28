@@ -8,7 +8,7 @@ import { Cake, Menu, ShoppingBag, X, User, LogOut, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/hooks/use-cart-store';
 import { CartSheet } from './CartSheet';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -66,7 +66,7 @@ export function Header() {
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <nav className="hidden items-center gap-6 md:flex">
           {navLinksLeft.map((link) => (
-            <Link key={link.href} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+            <Link key={link.label} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
               {link.label}
             </Link>
           ))}
@@ -86,11 +86,18 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left">
-                <nav className="flex flex-col gap-6 pt-8">
-                  {[...navLinksLeft, ...navLinksRight].map((link) => (
-                    <Link key={link.href} href={link.href} className="text-lg font-medium text-foreground transition-colors hover:text-primary">
-                       {link.label}
+                 <SheetClose asChild>
+                    <Link href="/" className="flex items-center gap-2 mb-8">
+                        <span className="text-3xl font-bold font-headline text-accent">CrumblePop</span>
                     </Link>
+                 </SheetClose>
+                <nav className="flex flex-col gap-6">
+                  {[...navLinksLeft, ...navLinksRight].map((link) => (
+                    <SheetClose asChild key={link.label}>
+                      <Link href={link.href} className="text-lg font-medium text-foreground transition-colors hover:text-primary">
+                        {link.label}
+                      </Link>
+                    </SheetClose>
                   ))}
                 </nav>
               </SheetContent>
@@ -100,7 +107,7 @@ export function Header() {
         <div className="flex items-center gap-2">
             <nav className="hidden items-center gap-6 md:flex">
               {navLinksRight.map((link) => (
-                <Link key={link.href} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                <Link key={link.label} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
                   {link.label}
                 </Link>
               ))}
@@ -152,8 +159,10 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="ghost" onClick={() => router.push('/login')}>
-              <User className="h-6 w-6" />
+            <Button asChild>
+              <Link href="/login">
+                <User className="h-6 w-6" />
+              </Link>
             </Button>
           )}
         </div>
