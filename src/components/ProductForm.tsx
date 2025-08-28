@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { useProductStore } from "@/hooks/use-product-store";
 import type { Product, ProductSize } from "@/lib/types";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 
@@ -57,6 +57,7 @@ interface ProductFormProps {
 
 export function ProductForm({ isOpen, setIsOpen, product }: ProductFormProps) {
   const { addProduct, updateProduct } = useProductStore();
+  const lastImageInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -101,6 +102,13 @@ export function ProductForm({ isOpen, setIsOpen, product }: ProductFormProps) {
       });
     }
   }, [product, form, isOpen]);
+
+  useEffect(() => {
+    if (imageFields.length > 1) {
+      lastImageInputRef.current?.focus();
+    }
+  }, [imageFields.length]);
+
 
   const onSubmit = (data: ProductFormValues) => {
     if (product) {
@@ -178,11 +186,15 @@ export function ProductForm({ isOpen, setIsOpen, product }: ProductFormProps) {
                     key={field.id}
                     control={form.control}
                     name={`images.${index}`}
-                    render={({ field }) => (
+                    render={({ field: { ref, ...fieldProps } }) => (
                       <FormItem>
                         <div className="flex items-center gap-2">
                            <FormControl>
-                            <Input placeholder="https://example.com/image.png" {...field} />
+                            <Input 
+                                placeholder="https://example.com/image.png" 
+                                {...fieldProps} 
+                                ref={index === imageFields.length - 1 ? lastImageInputRef : ref}
+                            />
                            </FormControl>
                            {imageFields.length > 1 && (
                             <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)}>
@@ -196,7 +208,7 @@ export function ProductForm({ isOpen, setIsOpen, product }: ProductFormProps) {
                   />
                 ))}
               </div>
-              <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => appendImage("")}>
+              <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => appendImage("", { shouldFocus: true })}>
                  <PlusCircle className="mr-2 h-4 w-4" /> Add Image
               </Button>
             </div>
