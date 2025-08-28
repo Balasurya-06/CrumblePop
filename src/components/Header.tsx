@@ -164,12 +164,10 @@ export function Header() {
                   <span>Profile</span>
                 </DropdownMenuItem>
                 {isAdmin && (
-                  <>
-                    <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
-                      <Shield className="mr-2 h-4 w-4" />
-                      <span>Admin</span>
-                    </DropdownMenuItem>
-                  </>
+                  <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
+                    <Shield className="mr-2 h-4 w-4" />
+                    <span>Admin Dashboard</span>
+                  </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
