@@ -105,6 +105,11 @@ export default function CheckoutPage() {
       date: new Date().toISOString(),
     });
     clearCart();
+    
+    const message = `Thank you for your order! Your Order ID is *${orderId}*. Please complete the payment.`;
+    const whatsappUrl = `https://wa.me/91${values.phone}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    
     router.push(`/order-confirmation?orderId=${orderId}`);
   }
 
@@ -166,7 +171,7 @@ export default function CheckoutPage() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" size="lg">Place Order (Cash on Delivery)</Button>
+                <Button type="submit" className="w-full" size="lg">Place Order & Pay</Button>
               </form>
             </Form>
           </CardContent>
