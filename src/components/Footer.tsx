@@ -4,12 +4,14 @@ import { Button } from './ui/button';
 
 export function Footer() {
   return (
-    <footer className="bg-secondary">
+    <footer className="bg-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
-                 <Link href="/" className="flex items-center gap-2 font-headline text-2xl font-bold mb-4 text-primary">
-                    CrumblePop
+                 <Link href="/" className="flex items-center gap-2 mb-4">
+                    <span className="text-2xl font-bold font-headline text-primary">
+                      CrumblePop
+                    </span>
                  </Link>
                  <p className="text-muted-foreground text-sm">Where every bite tastes like a celebration. Freshly baked goods made with love.</p>
                  <div className="flex space-x-2 mt-4">

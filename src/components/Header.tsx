@@ -22,8 +22,8 @@ import { Skeleton } from './ui/skeleton';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/menu', label: 'New' },
-  { href: '/about', label: 'Why Us' },
+  { href: '/menu', label: 'Cakes' },
+  { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -129,17 +129,19 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-20 items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full bg-white/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <div className="container mx-auto flex h-20 items-center justify-between px-4 py-4">
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center gap-2 text-2xl font-bold font-headline text-primary">
-            CrumblePop
+          <Link href="/" className="flex items-center gap-2">
+            <span className="text-2xl font-bold font-headline text-primary">
+              CrumblePop
+            </span>
           </Link>
         </div>
         
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
-            <Link key={link.label} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary data-[active=true]:text-primary data-[active=true]:font-bold">
+            <Link key={link.label} href={link.href} className="text-md font-medium text-gray-800 transition-colors hover:text-primary data-[active=true]:text-primary data-[active=true]:font-bold">
               {link.label}
             </Link>
           ))}
@@ -236,9 +238,7 @@ export function Header() {
                  <DropdownMenuItem onClick={() => router.push('/login')}>
                   <span>User Login</span>
                 </DropdownMenuItem>
-                 <DropdownMenuItem onClick={() => router.push('/admin/login')}>
-                  <span>Admin Login</span>
-                </DropdownMenuItem>
+
               </DropdownMenuContent>
             </DropdownMenu>
           )}

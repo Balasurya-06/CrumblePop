@@ -64,76 +64,77 @@ const categories = [
 export default function Home() {
   return (
     <div className="flex flex-col bg-background">
-      <section className="w-full">
+      <section className="w-full" style={{backgroundImage: "url('/strawberry-bg.png')", backgroundSize: "cover", backgroundPosition: "center"}}>
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-4 py-16 md:py-24">
-          <div className="order-2 md:order-1">
-            <Image 
-                src="https://picsum.photos/600/600?random=4" 
-                alt="Delicious layered cake with berries" 
-                width={600} 
-                height={600} 
-                className="rounded-lg shadow-lg"
-                data-ai-hint="berry cake"
-            />
-          </div>
-          <div className="order-1 md:order-2 text-center md:text-left">
-            <h1 className="text-5xl lg:text-7xl font-bold font-headline tracking-tight text-primary">
-              Do u like cake?
-            </h1>
+          <div className="order-1 md:order-1 text-center md:text-left">
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-2"><span className="text-black">Every One </span><span className="text-primary">Love's</span></h2>
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-4"><span className="text-black">Natural and</span><br /><span className="text-primary">healthy Cakes.</span></h1>
             <p className="mt-6 max-w-md mx-auto md:mx-0 text-lg text-muted-foreground">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
-            <Button asChild size="lg" className="mt-8 rounded-full px-10 py-6 text-lg">
-              <Link href="/menu">Buy Now</Link>
-            </Button>
+            <div className="flex gap-4 mt-8 justify-center md:justify-start">
+              <Button size="lg" className="rounded-full px-8 py-6 text-lg">ORDER NOW</Button>
+              <Button size="lg" variant="outline" className="rounded-full px-8 py-6 text-lg">EXPLORE MORE</Button>
+            </div>
+          </div>
+          <div className="order-2 md:order-2">
+            <div className="relative w-full h-[400px] md:h-[500px] rounded-full overflow-hidden border-8 border-white shadow-xl">
+              <Image 
+                src="https://i.etsystatic.com/48449877/r/il/f64ccd/5591642315/il_1588xN.5591642315_cn4z.jpg" 
+                alt="Delicious layered cake with berries" 
+                fill
+                className="object-cover"
+                data-ai-hint="strawberry cake"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-secondary py-16">
+      <section className="bg-white py-16">
         <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 {categories.map(category => (
-                    <div key={category.name} className="flex flex-col items-center">
-                        {category.icon}
-                        <p className="mt-2 text-muted-foreground">{category.name}</p>
+                    <div key={category.name} className="flex flex-col items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                        <div className="bg-primary/10 p-4 rounded-full">{category.icon}</div>
+                        <p className="mt-3 font-medium">{category.name}</p>
                     </div>
                 ))}
             </div>
         </div>
       </section>
 
-      <section className="bg-secondary py-20 md:py-24">
+      <section className="bg-white py-20 md:py-24">
           <div className="container mx-auto px-4">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-12 items-center">
                   <div className="md:col-span-1 text-center md:text-left">
-                     <h2 className="text-4xl font-bold md:text-5xl">What's New</h2>
+                     <h2 className="text-3xl font-bold md:text-4xl mb-2">Our <span className="text-primary">Cakes</span></h2>
                      <p className="mt-4 text-muted-foreground">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        Freshly baked goods made with love. Every bite tastes like a celebration.
                      </p>
+                     <Button variant="outline" className="mt-6 rounded-full px-6">View All</Button>
                   </div>
                   <div className="md:col-span-3">
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                          {newProducts.map(product => (
-                            <Card key={product.name} className="overflow-hidden rounded-xl shadow-lg border-2 border-transparent hover:border-primary transition-all">
-                                <CardContent className="p-4">
-                                  <div className="relative h-48 w-full mb-4">
+                            <Card key={product.name} className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-shadow">
+                                <CardContent className="p-0">
+                                  <div className="relative h-48 w-full">
                                       <Image
                                           src={product.image}
                                           alt={product.name}
                                           fill
-                                          className="object-cover rounded-lg"
+                                          className="object-cover"
                                           data-ai-hint={product.hint}
                                       />
-                                  </div>
-                                  <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-xl font-bold text-primary">{product.name}</h3>
-                                    <div className="bg-primary text-primary-foreground rounded-full px-4 py-1 text-sm font-bold">
+                                      <div className="absolute top-3 right-3 bg-white rounded-full px-3 py-1 text-sm font-bold shadow-md">
                                         ${product.price}
-                                    </div>
+                                      </div>
                                   </div>
-                                  <div className="bg-accent/50 p-4 rounded-lg">
-                                    <p className="text-sm text-accent-foreground">{product.description}</p>
+                                  <div className="p-4">
+                                    <h3 className="text-xl font-bold">{product.name}</h3>
+                                    <p className="text-sm text-muted-foreground mt-2">{product.description}</p>
+                                    <Button className="w-full mt-4 rounded-full" size="sm">Add to Cart</Button>
                                   </div>
                                 </CardContent>
                             </Card>
@@ -144,12 +145,12 @@ export default function Home() {
           </div>
       </section>
 
-      <section className="py-20 md:py-24">
+      <section className="py-20 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <Image 
-                src="https://picsum.photos/600/700?random=5" 
+                src="https://c8.alamy.com/zooms/9/56ee904c6cd4476aac5bbcaba57d725e/2bww6e0.jpg" 
                 alt="Cheesecake with blueberries and lemon" 
                 width={600} 
                 height={700} 
