@@ -40,6 +40,7 @@ export function Header() {
 
   useEffect(() => {
     setIsClient(true);
+    // This logic runs only on the client
     try {
       const loggedInUser = localStorage.getItem("loggedInUser");
       if (loggedInUser) {

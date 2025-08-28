@@ -27,12 +27,11 @@ export default function AdminLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsClient(true);
+    // This check runs only on the client
     const isAdmin = localStorage.getItem("isAdmin") === "true";
     if (isAdmin) {
       setIsAuth(true);
@@ -42,11 +41,12 @@ export default function AdminLayout({
     setIsLoading(false);
   }, [pathname, router]);
 
-  if (isLoading || !isClient) {
+  if (isLoading) {
      return <AdminLayoutSkeleton />;
   }
 
-  if (pathname === "/admin/login") {
+  // Allow login page to render without the full layout
+  if (!isAuth && pathname === "/admin/login") {
     return <>{children}</>;
   }
 
@@ -61,5 +61,7 @@ export default function AdminLayout({
     );
   }
 
-  return null;
+  // In the brief moment before the redirect happens,
+  // we can show a skeleton or null.
+  return <AdminLayoutSkeleton />;
 }

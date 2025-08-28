@@ -72,14 +72,9 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         setIsClient(true);
-    }, []);
-
-    useEffect(() => {
-        if (isClient) {
-            const uniqueCustomers = new Set(orders.map(order => order.customer.phone));
-            setTotalCustomers(uniqueCustomers.size);
-        }
-    }, [orders, isClient]);
+        const uniqueCustomers = new Set(orders.map(order => order.customer.phone));
+        setTotalCustomers(uniqueCustomers.size);
+    }, [orders]);
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);

@@ -54,11 +54,10 @@ export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const { orders } = useOrderStore();
   const [userOrders, setUserOrders] = useState<Order[]>([]);
-  const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsClient(true);
+    // This check runs only on the client
     const loggedInUser = localStorage.getItem("loggedInUser");
     if (!loggedInUser) {
       router.replace("/login");
@@ -67,8 +66,8 @@ export default function ProfilePage() {
       setUser(parsedUser);
       const currentUserOrders = orders.filter(order => order.customer.name === parsedUser.name);
       setUserOrders(currentUserOrders);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, [router, orders]);
 
   const getUserInitials = (name: string) => {
@@ -81,12 +80,13 @@ export default function ProfilePage() {
       return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
   }
 
-  if (!isClient || isLoading) {
+  if (isLoading) {
     return <ProfileSkeleton />;
   }
   
   if (!user) {
-    return null; // or redirecting...
+    // This can happen briefly before the redirect.
+    return <ProfileSkeleton />;
   }
 
   return (

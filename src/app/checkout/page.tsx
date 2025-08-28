@@ -113,7 +113,7 @@ export default function CheckoutPage() {
   }
   
   if (items.length === 0) {
-    return null;
+    return <CheckoutSkeleton />;
   }
 
   return (
