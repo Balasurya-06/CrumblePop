@@ -91,57 +91,55 @@ function OrderRow({ order }: { order: Order }) {
     }
 
     return (
-        <Collapsible.Root asChild onOpenChange={setIsOpen}>
-            <Fragment>
-                <Collapsible.Trigger asChild>
-                    <TableRow className="cursor-pointer">
-                        <TableCell>
-                            <div className="flex items-center">
-                                <Badge variant="outline">{order.id}</Badge>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 ml-2">
-                                    {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                                </Button>
-                            </div>
-                        </TableCell>
-                        <TableCell>
-                            <div className="font-medium">{order.customer.name}</div>
-                            <div className="text-sm text-muted-foreground">{order.customer.phone}</div>
-                        </TableCell>
-                        <TableCell>{order.items.reduce((acc, item) => acc + item.quantity, 0)}</TableCell>
-                        <TableCell>
-                            <a href={order.paymentScreenshot} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline inline-flex items-center">
-                                <LinkIcon className="h-4 w-4 mr-1" />
-                                View
-                            </a>
-                        </TableCell>
-                        <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
-                        <TableCell>
-                            <Badge className={cn({
-                                'bg-yellow-500 text-white': order.status === 'Pending',
-                                'bg-blue-500 text-white': order.status === 'Accepted',
-                                'bg-red-500 text-white': order.status === 'Declined',
-                                'bg-green-500 text-white': order.status === 'Delivered',
-                            })}>
-                                {order.status}
-                            </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                        {order.status === 'Pending' ? (
-                            <div className="flex gap-2 justify-end">
-                                <Button size="sm" onClick={() => handleAcceptOrder(order)}>Accept</Button>
-                                <Button size="sm" variant="destructive" onClick={() => updateOrderStatus(order.id, 'Declined')}>Decline</Button>
-                            </div>
-                        ) : order.status === 'Accepted' ? (
-                            <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleMarkAsDelivered(order)}>
-                                <CheckCircle className="mr-2 h-4 w-4" />
-                                Mark as Delivered
-                            </Button>
-                        ) : (
-                            <span>-</span>
-                        )}
-                        </TableCell>
-                    </TableRow>
-                </Collapsible.Trigger>
+        <>
+            <TableRow className="cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+                <TableCell>
+                    <div className="flex items-center">
+                        <Badge variant="outline">{order.id}</Badge>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 ml-2">
+                            {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                        </Button>
+                    </div>
+                </TableCell>
+                <TableCell>
+                    <div className="font-medium">{order.customer.name}</div>
+                    <div className="text-sm text-muted-foreground">{order.customer.phone}</div>
+                </TableCell>
+                <TableCell>{order.items.reduce((acc, item) => acc + item.quantity, 0)}</TableCell>
+                <TableCell>
+                    <a href={order.paymentScreenshot} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline inline-flex items-center">
+                        <LinkIcon className="h-4 w-4 mr-1" />
+                        View
+                    </a>
+                </TableCell>
+                <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
+                <TableCell>
+                    <Badge className={cn({
+                        'bg-yellow-500 text-white': order.status === 'Pending',
+                        'bg-blue-500 text-white': order.status === 'Accepted',
+                        'bg-red-500 text-white': order.status === 'Declined',
+                        'bg-green-500 text-white': order.status === 'Delivered',
+                    })}>
+                        {order.status}
+                    </Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                {order.status === 'Pending' ? (
+                    <div className="flex gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
+                        <Button size="sm" onClick={() => handleAcceptOrder(order)}>Accept</Button>
+                        <Button size="sm" variant="destructive" onClick={() => updateOrderStatus(order.id, 'Declined')}>Decline</Button>
+                    </div>
+                ) : order.status === 'Accepted' ? (
+                    <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={(e) => { e.stopPropagation(); handleMarkAsDelivered(order); }}>
+                        <CheckCircle className="mr-2 h-4 w-4" />
+                        Mark as Delivered
+                    </Button>
+                ) : (
+                    <span>-</span>
+                )}
+                </TableCell>
+            </TableRow>
+            <Collapsible.Root asChild open={isOpen}>
                  <Collapsible.Content asChild>
                     <tr className="bg-muted/50">
                         <TableCell colSpan={7} className="p-0">
@@ -182,8 +180,8 @@ function OrderRow({ order }: { order: Order }) {
                         </TableCell>
                     </tr>
                 </Collapsible.Content>
-            </Fragment>
-        </Collapsible.Root>
+            </Collapsible.Root>
+        </>
     )
 }
 
