@@ -73,18 +73,3 @@ export const products: Product[] = [
     ],
   },
 ];
-
-export function getProducts(category?: 'Cakes' | 'Brownies'): Product[] {
-  if (category) {
-    return products.filter((product) => product.category === category);
-  }
-  return products;
-}
-
-export function getProductById(id: string): Product | undefined {
-  return products.find((product) => product.id === id);
-}
-
-export function getBestsellers(): Product[] {
-  return products.filter((product) => product.isBestseller);
-}
