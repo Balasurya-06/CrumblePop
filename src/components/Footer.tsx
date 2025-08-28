@@ -9,7 +9,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
                  <Link href="/" className="flex items-center gap-2 font-headline text-2xl font-bold mb-4 text-primary">
-                    SweetCake
+                    CrumblePop
                  </Link>
                  <p className="text-muted-foreground text-sm">Where every bite tastes like a celebration. Freshly baked goods made with love.</p>
                  <div className="flex space-x-2 mt-4">
@@ -37,13 +37,13 @@ export function Footer() {
                  <h4 className="font-bold mb-4">Contact Us</h4>
                  <div className="text-sm text-muted-foreground space-y-2">
                     <p>123 Bakery St, Sweetville</p>
-                    <p>hello@sweetcake.com</p>
+                    <p>hello@crumblepop.com</p>
                     <p>+1 234 567 890</p>
                  </div>
             </div>
         </div>
         <div className="border-t pt-8 mt-8 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} SweetCake. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} CrumblePop. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

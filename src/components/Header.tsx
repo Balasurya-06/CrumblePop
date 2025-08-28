@@ -133,7 +133,7 @@ export function Header() {
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2 text-2xl font-bold font-headline text-primary">
-            SweetCake
+            CrumblePop
           </Link>
         </div>
         
@@ -155,7 +155,7 @@ export function Header() {
               <SheetContent side="left">
                  <SheetClose asChild>
                     <Link href="/" className="flex items-center gap-2 mb-8">
-                        <span className="text-3xl font-bold font-headline text-primary">SweetCake</span>
+                        <span className="text-3xl font-bold font-headline text-primary">CrumblePop</span>
                     </Link>                 
                   </SheetClose>
                 <nav className="flex flex-col gap-6">

@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import Image from 'next/image';
@@ -204,7 +205,7 @@ export default function Home() {
                   <Mail className="w-6 h-6 text-primary" />
                   <div>
                     <h4 className="font-semibold">Email Us</h4>
-                    <p className="text-muted-foreground">hello@sweetcake.com</p>
+                    <p className="text-muted-foreground">hello@crumblepop.com</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -218,7 +219,7 @@ export default function Home() {
                   <Globe className="w-6 h-6 text-primary" />
                    <div>
                     <h4 className="font-semibold">Our Website</h4>
-                    <p className="text-muted-foreground">www.sweetcake.com</p>
+                    <p className="text-muted-foreground">www.crumblepop.com</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
