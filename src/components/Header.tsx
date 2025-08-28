@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Cake, Menu, ShoppingBag, X, User, LogOut, Shield, Package } from 'lucide-react';
+import { Cake, Menu, ShoppingBag, X, User, LogOut, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/hooks/use-cart-store';
 import { CartSheet } from './CartSheet';
@@ -20,14 +20,10 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from './ui/skeleton';
 
-
-const navLinksLeft = [
-  { href: '/menu', label: 'Bakery' },
-  { href: '/menu?category=Brownies', label: 'Brownies' },
-];
-
-const navLinksRight = [
-  { href: '/about', label: 'About Us' },
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/menu', label: 'New' },
+  { href: '/about', label: 'Why Us' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -80,19 +76,19 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 text-2xl font-bold font-headline text-primary">
+            SweetCake
+          </Link>
+        </div>
+        
         <nav className="hidden items-center gap-6 md:flex">
-          {navLinksLeft.map((link) => (
-            <Link key={link.label} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          {navLinks.map((link) => (
+            <Link key={link.label} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary data-[active=true]:text-primary data-[active=true]:font-bold">
               {link.label}
             </Link>
           ))}
         </nav>
-        
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <Link href="/" className="flex items-center gap-2">
-                <span className="text-3xl font-bold font-headline text-accent">CrumblePop</span>
-            </Link>
-        </div>
 
         <div className="md:hidden">
             <Sheet>
@@ -104,43 +100,35 @@ export function Header() {
               <SheetContent side="left">
                  <SheetClose asChild>
                     <Link href="/" className="flex items-center gap-2 mb-8">
-                        <span className="text-3xl font-bold font-headline text-accent">CrumblePop</span>
-                    </Link>                 </SheetClose>
+                        <span className="text-3xl font-bold font-headline text-primary">SweetCake</span>
+                    </Link>                 
+                  </SheetClose>
                 <nav className="flex flex-col gap-6">
-                  {[...navLinksLeft, ...navLinksRight].map((link) => (
+                  {navLinks.map((link) => (
                     <SheetClose asChild key={link.label}>
                       <Link href={link.href} className="text-lg font-medium text-foreground transition-colors hover:text-primary">
                         {link.label}
                       </Link>
                     </SheetClose>
                   ))}
+                   <SheetClose asChild>
+                       <Link href="/login" className="text-lg font-medium text-foreground transition-colors hover:text-primary">
+                          Login
+                        </Link>
+                    </SheetClose>
+                     <SheetClose asChild>
+                       <Link href="/signup" className="text-lg font-medium text-foreground transition-colors hover:text-primary">
+                          Sign Up
+                        </Link>
+                    </SheetClose>
                 </nav>
               </SheetContent>
             </Sheet>
         </div>
         
-        <div className="flex items-center gap-2">
-            <nav className="hidden items-center gap-6 md:flex">
-              {navLinksRight.map((link) => (
-                <Link key={link.label} href={link.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-          <CartSheet>
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingBag className="h-6 w-6" />
-              {cartItemCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                  {cartItemCount}
-                </span>
-              )}
-            </Button>
-          </CartSheet>
-           
+        <div className="hidden items-center gap-2 md:flex">
           {!isClient ? (
-             <Skeleton className="h-10 w-10 rounded-full" />
+             <Skeleton className="h-10 w-24 rounded-md" />
           ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -176,22 +164,26 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                 <Button variant="ghost" size="icon">
-                  <User className="h-6 w-6" />
+            <>
+                <Button variant="ghost" asChild>
+                    <Link href="/login">Sign In</Link>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-48" align="end" forceMount>
-                 <DropdownMenuItem onClick={() => router.push('/login')}>
-                  <span>User Login</span>
-                </DropdownMenuItem>
-                 <DropdownMenuItem onClick={() => router.push('/admin/login')}>
-                  <span>Admin Login</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                <Button asChild>
+                    <Link href="/signup">Sign Up</Link>
+                </Button>
+            </>
           )}
+
+          <CartSheet>
+            <Button variant="ghost" size="icon" className="relative">
+              <ShoppingBag className="h-6 w-6" />
+              {cartItemCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                  {cartItemCount}
+                </span>
+              )}
+            </Button>
+          </CartSheet>
         </div>
       </div>
     </header>
