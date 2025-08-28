@@ -1,8 +1,10 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AdminSidebar } from "@/components/AdminSidebar";
 
 export default function AdminLayout({
   children,
@@ -42,5 +44,12 @@ export default function AdminLayout({
     return null; // Don't render anything while redirecting
   }
 
-  return <>{children}</>;
+  return (
+    <div className="flex min-h-screen">
+      <AdminSidebar />
+      <main className="flex-1 bg-background p-4 sm:p-6 md:p-8">
+        {children}
+      </main>
+    </div>
+  );
 }
