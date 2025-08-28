@@ -7,7 +7,8 @@ import type { Order } from '@/lib/types';
 
 interface OrderState {
   orders: Order[];
-  addOrder: (order: Order) => void;
+  addOrder: (order: Omit<Order, 'status'>) => void;
+  updateOrderStatus: (orderId: string, status: Order['status']) => void;
   totalOrders: () => number;
   totalRevenue: () => number;
 }
@@ -19,7 +20,15 @@ export const useOrderStore = create<OrderState>()(
       
       addOrder: (newOrder) => {
         set((state) => ({
-          orders: [newOrder, ...state.orders],
+          orders: [{ ...newOrder, status: 'Pending' }, ...state.orders],
+        }));
+      },
+
+      updateOrderStatus: (orderId, status) => {
+        set((state) => ({
+          orders: state.orders.map((order) =>
+            order.id === orderId ? { ...order, status } : order
+          ),
         }));
       },
 

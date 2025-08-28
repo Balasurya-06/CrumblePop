@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProductStore } from "@/hooks/use-product-store";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 function DashboardSkeleton() {
     return (
@@ -65,7 +67,7 @@ function DashboardSkeleton() {
 
 
 export default function AdminDashboard() {
-    const { orders, totalRevenue, totalOrders } = useOrderStore();
+    const { orders, totalRevenue, totalOrders, updateOrderStatus } = useOrderStore();
     const { products } = useProductStore();
     const [isClient, setIsClient] = useState(false);
     const [totalCustomers, setTotalCustomers] = useState(0);
@@ -141,20 +143,42 @@ export default function AdminDashboard() {
                            <TableHeader>
                                <TableRow>
                                    <TableHead>Customer</TableHead>
-                                   <TableHead>Contact</TableHead>
                                    <TableHead>Items</TableHead>
-                                   <TableHead className="text-right">Total</TableHead>
+                                   <TableHead>Total</TableHead>
                                    <TableHead>Date</TableHead>
+                                   <TableHead>Status</TableHead>
+                                   <TableHead className="text-right">Actions</TableHead>
                                </TableRow>
                            </TableHeader>
                            <TableBody>
                                {orders.slice(0, 10).map((order: Order) => (
                                    <TableRow key={order.id}>
-                                       <TableCell>{order.customer.name}</TableCell>
-                                       <TableCell>{order.customer.phone}</TableCell>
+                                       <TableCell>
+                                           <div className="font-medium">{order.customer.name}</div>
+                                           <div className="text-sm text-muted-foreground">{order.customer.phone}</div>
+                                       </TableCell>
                                        <TableCell>{order.items.reduce((acc, item) => acc + item.quantity, 0)}</TableCell>
-                                       <TableCell className="text-right">{formatCurrency(order.total)}</TableCell>
+                                       <TableCell>{formatCurrency(order.total)}</TableCell>
                                        <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
+                                       <TableCell>
+                                            <Badge variant={
+                                                order.status === 'Pending' ? 'secondary' :
+                                                order.status === 'Accepted' ? 'default' :
+                                                'destructive'
+                                            }>
+                                                {order.status}
+                                            </Badge>
+                                       </TableCell>
+                                       <TableCell className="text-right">
+                                        {order.status === 'Pending' ? (
+                                            <div className="flex gap-2 justify-end">
+                                                <Button size="sm" onClick={() => updateOrderStatus(order.id, 'Accepted')}>Accept</Button>
+                                                <Button size="sm" variant="destructive" onClick={() => updateOrderStatus(order.id, 'Declined')}>Decline</Button>
+                                            </div>
+                                        ) : (
+                                            <span>-</span>
+                                        )}
+                                       </TableCell>
                                    </TableRow>
                                ))}
                            </TableBody>
