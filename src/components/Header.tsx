@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Cake, Menu, ShoppingBag, X, User, LogOut, Shield } from 'lucide-react';
+import { Cake, Menu, ShoppingBag, X, User, LogOut, Shield, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/hooks/use-cart-store';
 import { CartSheet } from './CartSheet';
@@ -23,7 +23,7 @@ import { Skeleton } from './ui/skeleton';
 
 const navLinksLeft = [
   { href: '/menu', label: 'Bakery' },
-  { href: '/menu', label: 'Recipes' },
+  { href: '/menu?category=Recipes', label: 'Recipes' },
 ];
 
 const navLinksRight = [
@@ -52,6 +52,7 @@ export function Header() {
   };
 
   const getUserInitials = (name: string) => {
+    if (!name) return "";
     const names = name.split(' ');
     if (names.length > 1) {
       return `${names[0][0]}${names[1][0]}`;
@@ -59,7 +60,7 @@ export function Header() {
     return name.substring(0, 2);
   }
 
-  const cartItemCount = totalItems();
+  const cartItemCount = isClient ? totalItems() : 0;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -116,7 +117,7 @@ export function Header() {
           <CartSheet>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingBag className="h-6 w-6" />
-              {isClient && cartItemCount > 0 && (
+              {cartItemCount > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                   {cartItemCount}
                 </span>
@@ -146,6 +147,10 @@ export function Header() {
                 <DropdownMenuItem onClick={() => router.push('/profile')}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
+                </DropdownMenuItem>
+                 <DropdownMenuItem onClick={() => router.push('/admin/products')}>
+                  <Package className="mr-2 h-4 w-4" />
+                  <span>Products</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
                   <Shield className="mr-2 h-4 w-4" />

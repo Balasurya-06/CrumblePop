@@ -1,18 +1,19 @@
-import { getProducts } from "@/lib/products";
+
+"use client";
+
+import { useProductStore } from "@/hooks/use-product-store";
 import { ProductCard } from "@/components/ProductCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Metadata } from 'next';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from "react";
 
-export const metadata: Metadata = {
-  title: 'Menu - CrumblePop',
-  description: 'Explore our delicious menu of cakes and brownies.',
-};
+function MenuContent() {
+  const searchParams = useSearchParams();
+  const { getProducts } = useProductStore();
 
-
-export default function MenuPage({ searchParams }: { searchParams: { category?: string } }) {
   const cakes = getProducts("Cakes");
   const brownies = getProducts("Brownies");
-  const defaultTab = searchParams.category === "Brownies" ? "brownies" : "cakes";
+  const defaultTab = searchParams.get("category") === "Brownies" ? "brownies" : "cakes";
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -44,4 +45,12 @@ export default function MenuPage({ searchParams }: { searchParams: { category?: 
       </Tabs>
     </div>
   );
+}
+
+export default function MenuPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <MenuContent />
+        </Suspense>
+    )
 }

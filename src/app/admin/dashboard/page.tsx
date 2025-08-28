@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -15,19 +16,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useProductStore } from "@/hooks/use-product-store";
 
 export default function AdminDashboard() {
     const { orders, totalRevenue, totalOrders } = useOrderStore();
+    const { products } = useProductStore();
     const [isClient, setIsClient] = useState(false);
     const [totalCustomers, setTotalCustomers] = useState(0);
 
     useEffect(() => {
         setIsClient(true);
-        if (orders.length > 0) {
+    }, []);
+
+    useEffect(() => {
+        if (isClient) {
             const uniqueCustomers = new Set(orders.map(order => order.customer.phone));
             setTotalCustomers(uniqueCustomers.size);
         }
-    }, [orders]);
+    }, [orders, isClient]);
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
@@ -47,9 +53,9 @@ export default function AdminDashboard() {
                     </Card>
                      <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Orders</CardTitle>
+                            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
                             <Package className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
+                        </Header>
                         <CardContent><Skeleton className="h-8 w-12" /></CardContent>
                     </Card>
                     <Card>
@@ -63,7 +69,7 @@ export default function AdminDashboard() {
                     </Card>
                      <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Average Sale</CardTitle>
+                            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
                             <CreditCard className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
@@ -97,12 +103,12 @@ export default function AdminDashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                            Total Orders
+                            Total Products
                         </CardTitle>
                         <Package className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">+{totalOrders()}</div>
+                        <div className="text-2xl font-bold">{products.length}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -117,12 +123,12 @@ export default function AdminDashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
-                           Average Sale
+                           Total Orders
                         </CardTitle>
                         <CreditCard className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{formatCurrency(totalOrders() > 0 ? totalRevenue() / totalOrders() : 0)}</div>
+                        <div className="text-2xl font-bold">+{totalOrders()}</div>
                     </CardContent>
                 </Card>
             </div>

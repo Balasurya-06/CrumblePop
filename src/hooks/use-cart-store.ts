@@ -1,9 +1,9 @@
+
 "use client";
 
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { CartItem } from '@/lib/types';
-import { toast } from './use-toast';
 
 interface CartState {
   items: CartItem[];
@@ -37,10 +37,6 @@ export const useCartStore = create<CartState>()(
             items: [...state.items, { ...newItem, id: itemId, quantity: 1 }],
           }));
         }
-        toast({
-            title: "Added to cart!",
-            description: `${newItem.name} (${newItem.size}) has been added to your cart.`,
-        });
       },
       
       removeItem: (itemId) => {
