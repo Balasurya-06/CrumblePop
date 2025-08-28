@@ -54,7 +54,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const { orders } = useOrderStore();
   const [userOrders, setUserOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     // This check runs only on the client
@@ -66,8 +66,8 @@ export default function ProfilePage() {
       setUser(parsedUser);
       const currentUserOrders = orders.filter(order => order.customer.name === parsedUser.name);
       setUserOrders(currentUserOrders);
-      setIsLoading(false);
     }
+    setIsClient(true);
   }, [router, orders]);
 
   const getUserInitials = (name: string) => {
@@ -80,12 +80,7 @@ export default function ProfilePage() {
       return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
   }
 
-  if (isLoading) {
-    return <ProfileSkeleton />;
-  }
-  
-  if (!user) {
-    // This can happen briefly before the redirect.
+  if (!isClient || !user) {
     return <ProfileSkeleton />;
   }
 
