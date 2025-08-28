@@ -40,12 +40,16 @@ export function Header() {
 
   useEffect(() => {
     setIsClient(true);
-    const loggedInUser = localStorage.getItem("loggedInUser");
-    if (loggedInUser) {
-      setUser(JSON.parse(loggedInUser));
+    try {
+      const loggedInUser = localStorage.getItem("loggedInUser");
+      if (loggedInUser) {
+        setUser(JSON.parse(loggedInUser));
+      }
+      const adminStatus = localStorage.getItem("isAdmin") === "true";
+      setIsAdmin(adminStatus);
+    } catch (error) {
+      console.error("Failed to access localStorage:", error);
     }
-    const adminStatus = localStorage.getItem("isAdmin") === "true";
-    setIsAdmin(adminStatus);
   }, []);
 
   const handleLogout = () => {
