@@ -35,8 +35,8 @@ export function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    // This logic now runs only on the client after the component has mounted
     setIsClient(true);
-    // This logic runs only on the client
     try {
       const loggedInUser = localStorage.getItem("loggedInUser");
       if (loggedInUser) {
@@ -47,7 +47,7 @@ export function Header() {
       const adminStatus = sessionStorage.getItem("isAdmin") === "true";
       setIsAdmin(adminStatus);
     } catch (error) {
-      console.error("Failed to access localStorage:", error);
+      console.error("Failed to access storage:", error);
       setUser(null);
       setIsAdmin(false);
     }
@@ -71,7 +71,7 @@ export function Header() {
     return name.substring(0, 2);
   }
 
-  const cartItemCount = isClient ? totalItems() : 0;
+  const cartItemCount = useCartStore(state => state.totalItems());
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -177,7 +177,7 @@ export function Header() {
           <CartSheet>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingBag className="h-6 w-6" />
-              {cartItemCount > 0 && (
+               {isClient && cartItemCount > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                   {cartItemCount}
                 </span>
