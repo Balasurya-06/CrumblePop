@@ -82,6 +82,13 @@ export default function AdminDashboard() {
             setTotalCustomers(uniqueCustomers.size);
         }
     }, [orders, isClient]);
+    
+    const handleAcceptOrder = (order: Order) => {
+        updateOrderStatus(order.id, 'Accepted');
+        const message = `Your order *${order.id}* has been approved! We will deliver it shortly. Thank you for choosing CrumblePop!`;
+        const whatsappUrl = `https://wa.me/91${order.customer.phone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    }
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
@@ -177,7 +184,7 @@ export default function AdminDashboard() {
                                        <TableCell className="text-right">
                                         {order.status === 'Pending' ? (
                                             <div className="flex gap-2 justify-end">
-                                                <Button size="sm" onClick={() => updateOrderStatus(order.id, 'Accepted')}>Accept</Button>
+                                                <Button size="sm" onClick={() => handleAcceptOrder(order)}>Accept</Button>
                                                 <Button size="sm" variant="destructive" onClick={() => updateOrderStatus(order.id, 'Declined')}>Decline</Button>
                                             </div>
                                         ) : (
