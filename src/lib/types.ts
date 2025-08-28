@@ -34,5 +34,5 @@ export type Order = {
   items: CartItem[];
   total: number;
   date: string;
-  status: 'Pending' | 'Accepted' | 'Declined';
+  status: 'Pending' | 'Accepted' | 'Declined' | 'Delivered';
 };

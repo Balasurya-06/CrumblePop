@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Package, Users, CreditCard } from 'lucide-react';
+import { DollarSign, Package, Users, CreditCard, CheckCircle } from 'lucide-react';
 import { useOrderStore } from "@/hooks/use-order-store";
 import type { Order } from "@/lib/types";
 import {
@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useProductStore } from "@/hooks/use-product-store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 function DashboardSkeleton() {
     return (
@@ -173,11 +174,12 @@ export default function AdminDashboard() {
                                        <TableCell>{formatCurrency(order.total)}</TableCell>
                                        <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
                                        <TableCell>
-                                            <Badge variant={
-                                                order.status === 'Pending' ? 'secondary' :
-                                                order.status === 'Accepted' ? 'default' :
-                                                order.status === 'Declined' ? 'destructive' : 'outline'
-                                            }>
+                                            <Badge className={cn({
+                                                'bg-yellow-500 text-white': order.status === 'Pending',
+                                                'bg-blue-500 text-white': order.status === 'Accepted',
+                                                'bg-red-500 text-white': order.status === 'Declined',
+                                                'bg-green-500 text-white': order.status === 'Delivered',
+                                            })}>
                                                 {order.status}
                                             </Badge>
                                        </TableCell>
@@ -187,6 +189,11 @@ export default function AdminDashboard() {
                                                 <Button size="sm" onClick={() => handleAcceptOrder(order)}>Accept</Button>
                                                 <Button size="sm" variant="destructive" onClick={() => updateOrderStatus(order.id, 'Declined')}>Decline</Button>
                                             </div>
+                                        ) : order.status === 'Accepted' ? (
+                                            <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => updateOrderStatus(order.id, 'Delivered')}>
+                                                <CheckCircle className="mr-2 h-4 w-4" />
+                                                Mark as Delivered
+                                            </Button>
                                         ) : (
                                             <span>-</span>
                                         )}
