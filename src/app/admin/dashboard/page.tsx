@@ -91,6 +91,13 @@ export default function AdminDashboard() {
         window.open(whatsappUrl, '_blank');
     }
 
+    const handleMarkAsDelivered = (order: Order) => {
+        updateOrderStatus(order.id, 'Delivered');
+        const message = `Your order *${order.id}* has been dispatched from the bakery! It will reach you soon. Thank you for choosing CrumblePop!`;
+        const whatsappUrl = `https://wa.me/91${order.customer.phone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
     }
@@ -190,7 +197,7 @@ export default function AdminDashboard() {
                                                 <Button size="sm" variant="destructive" onClick={() => updateOrderStatus(order.id, 'Declined')}>Decline</Button>
                                             </div>
                                         ) : order.status === 'Accepted' ? (
-                                            <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => updateOrderStatus(order.id, 'Delivered')}>
+                                            <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleMarkAsDelivered(order)}>
                                                 <CheckCircle className="mr-2 h-4 w-4" />
                                                 Mark as Delivered
                                             </Button>
